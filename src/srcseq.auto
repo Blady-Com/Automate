@@ -1,0 +1,252 @@
+{-------------------------------------------------------------------------------
+-- NOM DU CSU (automate)            : SrcSeq.auto
+-- AUTEUR DU CSU                    : P. Pignard
+-- VERSION DU CSU                   : 2.1a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2008
+-- ROLE DU CSU                      : Automate assurant le décodage syntaxique de
+--                                    son langage de descrition d'automates.
+--
+-- FONCTIONS EXPORTEES DU CSU       : SrcSeq
+--
+--
+-- FONCTIONS LOCALES DU CSU         :
+--
+--
+-- NOTES                            :
+--
+--
+-------------------------------------------------------------------------------}
+
+automate SrcSeq
+
+
+{ Evénements définis par défaut }
+default
+  event CommentId to same
+  event NewLineId to same
+    action `    if Debug then`
+           `      Status(SrcAuto, NomFich, LigneFich);`
+           `      Put_Line("Fichier " & NomFich & ", ligne " & Integer'Image(LigneFich));`
+           `    end if;`
+  event default to error
+    action `    Status(SrcAuto, NomFich, LigneFich);`
+           `    Put_Line("Erreur de syntaxe à la ligne " & Integer'Image(LigneFich) & " , " & TTokenId'Image(Event) & " , " & Token);`
+
+
+{ Définition de l'automate}
+{ Etat de départ de l'automate }
+from DA1
+  init action `flLocalDefault := False; flDefaultDefault := False; flGosub:=False;`
+  event AutomId to DA2
+
+{ Nom de l'automate }
+from DA2
+  event UndefId to DA3
+    action `    AName := Token;`
+
+{ Définition des événements par défaut ou d'un état }
+from DA3
+  event FromId to DA5
+    gosub ET1
+  event DefaultId to DA5
+    gosub D1
+
+{ Définition d'un autre état ou de la fin de l'automate }
+from DA5
+  event FromId to DA5
+    gosub ET1
+  event EndId to fin
+
+
+{ Définition d'un état }
+{ Définition de l'état courant }
+from ET1
+  event UndefId to ET2
+    action `    AddNew(StateList, Token);`
+           `    AddNew(ObjectList, "procedure Action" & Token & " is");`
+           `    AddNew(ObjectList, "  DumEvent : " & TEventStr & ";");`
+           `    AddNew(ObjectList, "");`
+           `    AddNew(ObjectList, "  begin");`
+           `    AddNew(ObjectList, "  DumEvent := " & NullEventStr & ";");`
+           `    CopyTo(DefaultInitList, ObjectList);`
+
+{ Définition de l'initialisation ou des événements }
+from ET2
+  event InitId to ET3
+  event EventId + to ET4
+    action `    AddNew(ObjectList,  "  case Event is");`
+           `    CopyTo(DefaultEventList, ObjectList);`
+
+{ Définition d'une autre action ou d'un événement }
+from ET3
+  event CallId, GosubId, ActionId, CarId + to same
+    action `    DefaultOutputList := ObjectList;`
+    gosub A1
+  event EventId + to ET4
+    action `    AddNew(ObjectList,  "  case Event is");`
+           `    CopyTo(DefaultEventList, ObjectList);`
+
+{ Définition d'un autre événement, d'un autre état ou de la fin de l'automate }
+from ET4
+  event EventId to same
+    action `    DefaultOutputList := ObjectList;`
+    gosub EV1
+  event FromId, EndId + to out
+    action `    if flDefaultDefault and then not flLocaldefault then`
+           `      CopyTo(DefaultDefaultList, ObjectList);`
+           `    end if;`
+           `    if not flLocaldefault and then not flDefaultDefault then`
+           `      AddNew(ObjectList,  "    when others =>");`
+           `      AddNew(ObjectList,  "      null;");`
+           `    end if;`
+           `    flLocalDefault := False;`
+           `    AddNew(ObjectList,  "    end case;");`
+           `    AddNew(ObjectList,  "  Event := DumEvent;");`
+           `    AddNew(ObjectList,  "  end;");`
+           `    AddNew(ObjectList, "");`
+           `    AddNew(ObjectList, "");`
+
+
+{ Définition d'un événement }
+{ Nom de l'événement: identificateur ou "default" }
+from EV1
+  event UndefId to EV2
+    action `    Add(DefaultOutputList, "    when " & Token);`
+           `    AddUniq(EventList, Token);`
+  event DefaultId to EV2
+    action `    flLocalDefault := True;`
+           `    Add(DefaultOutputList,  "    when others");`
+
+{ Définition d'une suite d"événements, du chaînage des événements ou de l'état destination }
+from EV2
+  event VirgId to EV3
+    action `    Add(DefaultOutputList, " | ");`
+  event PointPointId to EV3
+    action `    Add(DefaultOutputList, " .. ");`
+  event PlusId to EV4
+    action `    AddNew(DefaultOutputList,  " =>");`
+           `    AddNew(DefaultOutputList,  "      DumEvent := Event;");`
+  event ToId to EV5
+    action `    AddNew(DefaultOutputList,  " =>");`
+
+{ Nom de l'événement }
+from EV3
+  event UndefId to EV2
+    action `    Add(DefaultOutputList, Token);`
+           `    AddUniq(EventList, Token);`
+
+{ Définition de l'état suivant }
+from EV4
+  event ToId to EV5
+
+{ Nom de l'état suivant: identificateur, "out", "error" ou "same" }
+from EV5
+  event UndefId to EV6
+    action `    StateToStr := Token;`
+  event OutId to EV6
+    action `    StateToStr := To_Unbounded_String("stQuit");`
+  event ErrId to EV6
+    action `    StateToStr := To_Unbounded_String("stError");`
+  event SameId to EV6
+    action `    StateToStr := To_Unbounded_String("");`
+
+{ Définition des actions, d'un autre événement, d'un autre état ou de la fin de l'automate }
+from EV6
+  event EventId, EndId, FromId + to out
+    action `    if StateToStr /= "" then`
+           `      AddNew(DefaultOutputList, "      State := " & StateToStr & ";");`
+           `    else`
+           `      AddNew(DefaultOutputList, "      null;");`
+           `    end if;`
+           `    if flGosub then`
+           `      AddNew(DefaultOutputList, "            else");`
+           `      AddNew(DefaultOutputList, "          State := stError;");`
+           `      AddNew(DefaultOutputList, "          end if;");`
+           `      AddNew(DefaultOutputList, "        end;");`
+           `      flGosub := False;`
+           `    end if;`
+  event CallId, GosubId, ActionId, CarId + to same
+    gosub A1
+
+
+{ Définition d'une action }
+{ Définition des actions: "call", "gosub", "action", texte Ada }
+from A1
+  event CallId to A2
+  event GosubId to A3
+  event ActionId to A4
+  event CarId + to A4
+
+{ Nom du sous-automate externe }
+from A2
+  event UndefId to out
+    action `    AddNew(DefaultOutputList, "      declare");`
+           `    AddNew(DefaultOutputList, "        LResult : Boolean;");`
+           `    AddNew(DefaultOutputList, "      begin");`
+           `    AddNew(DefaultOutputList, "        Start" & Token & "(LResult, Debug);");`
+           `    AddNew(DefaultOutputList, "        if LResult then");`
+           `    AddUniq(CallUnitList, Token);`
+           `    flGosub := True;`
+
+{ Nom du sous-automate }
+from A3
+  event UndefId to out
+    action `    AddNew(DefaultOutputList, "      declare");`
+           `    AddNew(DefaultOutputList, "        LResult : Boolean;");`
+           `    AddNew(DefaultOutputList, "      begin");`
+           `    AddNew(DefaultOutputList, "        Automate(" & Token & ", DumEvent, " & EventDesStr &`
+           `                                                ", LResult, Debug);");`
+           `    AddNew(DefaultOutputList, "        if LResult then");`
+           `    flGosub := True;`
+
+{ Texte de l'action }
+from A4
+  event CarId to out
+    action `    AddNew(DefaultOutputList, "  " & Token);`
+
+
+{ Définition des actions par défaut }
+{ Définition du sous-automate des initialisations et des événements par défaut }
+from D1
+  event InitId to D2
+  event EventId + to D4
+
+{ Définition des actions }
+from D2
+  event CallId, GosubId, ActionId, CarId + to D3
+    action `    DefaultOutputList := DefaultInitList;`
+    gosub A1
+
+{ Définition des actions: texte Ada, "gosub", "call';
+  d'un autre événement ou de la fin du sous automate }
+from D3
+  event FromId + to out
+  event CallId, GosubId, ActionId, CarId + to same
+    action `    DefaultOutputList := DefaultInitList;`
+    gosub A1
+  event EventId + to D4
+
+{ Définition d'un autre événement ou de la fin du sous automate }
+from D4
+  event EventId to D5
+  event FromId + to out
+
+{ Nom de l'événement: identificateur ou "default" }
+from D5
+  event UndefId to D4
+    action `    DefaultOutputList := DefaultEventList;`
+           `    Add(DefaultOutputList, "    when " & Token);`
+           `    AddUniq(EventList, Token);`
+    gosub EV2
+  event DefaultId to D4
+    action `    DefaultOutputList := DefaultDefaultList;`
+           `    Add(DefaultOutputList, "    when others");`
+           `    flDefaultDefault := True;`
+    gosub EV2
+
+{ Fin de l'automate}
+from Fin
+  event EotId to out
+
+{ Fin du texte de l'automate.}
+end

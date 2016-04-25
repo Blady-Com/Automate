@@ -1,0 +1,75 @@
+automate RobSeq
+
+default
+  event default
+    to same
+      action `    Put_Line("Ordre incorrect !!!");`
+
+from DroiteHautOuvert
+  event Descend
+    to DroiteBasOuvert
+      action `    Put_Line("État du bras : DroiteBasOuvert");`
+  event Gauche
+    to GaucheHautOuvert
+      action `    Put_Line("État du bras : GaucheHautOuvert");`
+
+from GaucheHautOuvert
+  event Descend
+    to GaucheBasOuvert
+      action `    Put_Line("État du bras : GaucheBasOuvert");`
+  event Droite
+    to DroiteHautOuvert
+      action `    Put_Line("État du bras : DroiteHautOuvert");`
+
+from DroiteBasOuvert
+  event Monte
+    to DroiteHautOuvert
+      action `    Put_Line("État du bras : DroiteHautOuvert");`
+
+from GaucheBasOuvert
+  event Prend
+    to GaucheBasFerme
+      action `    Put_Line("Objet pris");`
+  event Monte
+    to GaucheHautOuvert
+      action `    Put_Line("État du bras : GaucheHautOuvert");`
+
+from DroiteHautFerme
+  event Lache
+    to DroiteHautOuvert
+      action `    Put_Line("Objet perdu");`
+  event Descend
+    to DroiteBasFerme
+      action `    Put_Line("État du bras : DroiteBasFerme");`
+  event Gauche
+    to GaucheHautFerme
+      action `    Put_Line("État du bras : GaucheHautFerme");`
+
+from GaucheHautFerme
+  event Lache
+    to GaucheHautOuvert
+      action `    Put_Line("Objet perdu");`
+  event Descend
+    to GaucheBasFerme
+      action `    Put_Line("État du bras : GaucheBasFerme");`
+  event Droite
+    to DroiteHautFerme
+      action `    Put_Line("État du bras : DroiteHautFerme");`
+
+from DroiteBasFerme
+  event Lache
+    to out
+      action `    Put_Line("Objet posé. Fin.");`
+  event Monte
+    to DroiteHautFerme
+      action `    Put_Line("État du bras : DroiteHautFerme");`
+
+from GaucheBasFerme
+  event Lache
+    to GaucheBasOuvert
+      action `    Put_Line("Objet lâché");`
+  event Monte
+    to GaucheHautFerme
+      action `    Put_Line("État du bras : GaucheHautFerme");`
+
+end
