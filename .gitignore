@@ -1,2 +1,5 @@
 obj/
 .DS_Store
+*.npp
+*.ali
+*.o

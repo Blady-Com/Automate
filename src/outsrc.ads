@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : OutSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.0b
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
@@ -24,33 +24,35 @@ package OutSrc is
 
    -- Objet assurant l'écriture du package Ada
    type TTextListMgr is tagged private;
-   type PTextListMgr is access TTextListMgr'Class;
+   type PTextListMgr is access TTextListMgr;
 
-   procedure Add (Object : access TTextListMgr'Class; S : TText);
-   procedure Add (Object : access TTextListMgr'Class; S : String);
-   procedure AddNew (Object : access TTextListMgr'Class; S : TText);
-   procedure AddNew (Object : access TTextListMgr'Class; S : String);
-   procedure WriteToFile (Object : access TTextListMgr'Class; F : File_Type);
-   procedure CopyTo (Object : access TTextListMgr'Class; DstText : access TTextListMgr'Class);
-   procedure Done (Object : access TTextListMgr'Class);
+   procedure Add (Object : not null access TTextListMgr; S : TText);
+   procedure Add (Object : not null access TTextListMgr; S : String);
+   procedure AddNew (Object : not null access TTextListMgr; S : TText);
+   procedure AddNew (Object : not null access TTextListMgr; S : String);
+   procedure WriteToFile (Object : not null access TTextListMgr; F : File_Type);
+   procedure CopyTo
+     (Object  : not null access TTextListMgr;
+      DstText : not null access TTextListMgr);
+   procedure Done (Object : not null access TTextListMgr);
 
    -- Objet assurant l'écriture d'énumérés
    type TEnumListMgr is new TTextListMgr with private;
-   type PEnumListMgr is access TEnumListMgr'Class;
+   type PEnumListMgr is access TEnumListMgr;
 
    -- Ajoute un élément s'il ne l'a pas déjà été
-   procedure AddUniq (Object : access TEnumListMgr'Class; S : TText);
+   procedure AddUniq (Object : not null access TEnumListMgr; S : TText);
    -- Ecrit le type des énumérés dans le fichier F
-   procedure TWriteToFile (Object : access TEnumListMgr'Class; F : File_Type);
+   procedure TWriteToFile (Object : not null access TEnumListMgr; F : File_Type);
 
    -- Objet assurant l'écriture des états de l'automate
    type TStateListMgr is new TEnumListMgr with private;
-   type PStateListMgr is access TStateListMgr'Class;
+   type PStateListMgr is access TStateListMgr;
 
    -- Ecrit le corps des états dans le fichier F
-   procedure AWriteToFile (Object : access TStateListMgr'Class; F : File_Type);
+   procedure AWriteToFile (Object : not null access TStateListMgr; F : File_Type);
    -- Ecrit l'appel du premier état dans le fichier F
-   procedure CWriteToFile (Object : access TStateListMgr'Class; F : File_Type);
+   procedure CWriteToFile (Object : not null access TStateListMgr; F : File_Type);
 
    -- Variables utilisées dans l'automate :
 
@@ -103,7 +105,7 @@ private
    -- Objet assurant l'écriture du package Ada
    type TTextListMgr is tagged record
       FirstElt, CurElt : PTextList := null;
-      CurStr           : TText     := To_Unbounded_String ("");
+      CurStr           : TText     := Null_Unbounded_String;
    end record;
 
    -- Objet assurant l'écriture d'énumérés

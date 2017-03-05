@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : InSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.0b
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
 -- ROLE DU CSU                      : Unité de gestion des textes sources.
 --
@@ -25,12 +25,12 @@ package InSrc is
 
    -- Objet assurant la gestion du fichier source.
    type TSourceMgr is tagged limited private;
-   type PSourceMgr is access TSourceMgr'Class;
+   type PSourceMgr is access TSourceMgr;
 
-   procedure Open (Object : access TSourceMgr'Class; Name : TText);
-   procedure Read (Object : access TSourceMgr'Class; Ch1, Ch2 : out Character);
-   procedure Status (Object : access TSourceMgr'Class; Name : out TText; Ligne : out Natural);
-   procedure Close (Object : access TSourceMgr'Class);
+   procedure Open (Object : not null access TSourceMgr; Name : TText);
+   procedure Read (Object : not null access TSourceMgr; Ch1, Ch2 : out Character);
+   procedure Status (Object : not null access TSourceMgr; Name : out TText; Ligne : out Natural);
+   procedure Close (Object : not null access TSourceMgr);
 
    -- Eléments lexicaux
    type TTokenId is

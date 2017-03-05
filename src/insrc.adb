@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : InSrc.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2a
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 8 juin 2008
 -- ROLE DU CSU                      : Unité de gestion des textes sources.
 --
@@ -59,7 +59,7 @@ package body InSrc is
    type TGenericErr is (ManqueApos, ManqueComment);
 
    -- Procédure donnant le nom et la ligne courante du fichier source.
-   procedure Status (Object : access TSourceMgr'Class; Name : out TText; Ligne : out Natural) is
+   procedure Status (Object : not null access TSourceMgr; Name : out TText; Ligne : out Natural) is
    begin
       Name  := FSplitName (Object.FName);
       Ligne := Object.CptLigne;
@@ -80,7 +80,7 @@ package body InSrc is
    end FileRead;
 
    -- Procédure de lecture du contenu du fichier source.
-   procedure Open (Object : access TSourceMgr'Class; Name : TText) is
+   procedure Open (Object : not null access TSourceMgr; Name : TText) is
    begin
       Object.FName    := Name;
       Object.CptCar   := 0;
@@ -101,7 +101,7 @@ package body InSrc is
 
    -- Procédure de lecture d'un caractère du buffer contenant le texte source.
    -- Le caractère lu est dans Ch1, le suivant est dans Ch2.
-   procedure Read (Object : access TSourceMgr'Class; Ch1, Ch2 : out Character) is
+   procedure Read (Object : not null access TSourceMgr; Ch1, Ch2 : out Character) is
    begin
       Ch1           := Object.ChTemp;
       Object.CptCar := Object.CptCar + 1;
@@ -115,10 +115,10 @@ package body InSrc is
    end Read;
 
    -- Procédure de destruction du buffer.
-   procedure Close (Object : access TSourceMgr'Class) is
+   procedure Close (Object : not null access TSourceMgr) is
    begin
-      Object.FName    := To_Unbounded_String ("");
-      Object.TextBuff := To_Unbounded_String ("" & Asciieot);
+      Object.FName    := Null_Unbounded_String;
+      Object.TextBuff := To_Unbounded_String ((1 => Asciieot));
    end Close;
 
    -- Renvoie la chaîne en minuscule.
@@ -246,7 +246,7 @@ package body InSrc is
       end ReadIdent;
 
    begin
-      Token   := To_Unbounded_String ("");
+      Token   := Null_Unbounded_String;
       TokenId := ErrorId;
       Read (SrcAuto, Ch, ChSuivant);
       while Is_In (Ch, Blanccharset) loop

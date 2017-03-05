@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : BasicDef.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.1a
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 18 juillet 2008
 -- ROLE DU CSU                      : Unité de définition de types et procédures.
 --
@@ -38,12 +38,12 @@ package body BasicDef is
 
    procedure Get_Line (Item : out TText) is
    begin
-      Get_Line (Unbounded_String (Item));
+      Get_Line (Ada.Strings.Unbounded.Unbounded_String (Item));
    end Get_Line;
 
    procedure Put_Line (Item : TText) is
    begin
-      Put_Line (Unbounded_String (Item));
+      Put_Line (Ada.Strings.Unbounded.Unbounded_String (Item));
    end Put_Line;
 
    -- Fonction retournant une chaîne sans le dernier élément séparé par un point

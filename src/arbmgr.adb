@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : ArbMgr.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.0b
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 6 mai 2001
 -- ROLE DU CSU                      : Unité de gestion d'un arbre binaire.
 --
@@ -44,7 +44,7 @@ package body ArbMgr is
    procedure Ajoute (Clef : TClef; Element : TElement) is
       NoeudNouveau : PNoeud;
 
-      procedure AjouteDans (Noeud : PNoeud) is
+      procedure AjouteDans (Noeud : not null PNoeud) is
       begin
          if Clef /= Noeud.Clef then
             if Clef < Noeud.Clef then
@@ -81,7 +81,7 @@ package body ArbMgr is
 
       procedure Free is new Ada.Unchecked_Deallocation (TTab, PTab);
 
-      procedure PlaceDansTab (Noeud : PNoeud) is
+      procedure PlaceDansTab (Noeud : not null PNoeud) is
       begin
          if Noeud.Gauche /= null then
             PlaceDansTab (Noeud.Gauche);
@@ -89,7 +89,12 @@ package body ArbMgr is
          if Tab = null then
             Tab := new TTab'(Positive'First => Noeud);  -- premier élément du tableau
          else
-            Tab := new TTab'(Tab (Tab'Range) & Noeud);   -- les suivants
+            declare
+               AncienTab : PTab := Tab;
+            begin
+               Tab := new TTab'(Tab (Tab'Range) & Noeud);  -- les suivants
+               Free (AncienTab);
+            end;
          end if;
          if Noeud.Droit /= null then
             PlaceDansTab (Noeud.Droit);
@@ -123,16 +128,18 @@ package body ArbMgr is
       end PlaceDansListe;
 
    begin
-      PlaceDansTab (Arbre);
-      PlaceDansArbre (Arbre, Tab'First, Tab'Last);
-      PlaceDansListe (Liste);
-      Free (Tab);
-      AJour := True;
+      if Arbre /= null then
+         PlaceDansTab (Arbre);
+         PlaceDansArbre (Arbre, Tab'First, Tab'Last);
+         PlaceDansListe (Liste);
+         Free (Tab);
+         AJour := True;
+      end if;
    end Balance;
 
    -- Procédure qui recherche un élément dans l'arbre binaire et qui renvoie son Element.
    procedure Recherche (Clef : TClef; Element : out TElement) is
-      procedure RechercheDans (Noeud : PNoeud) is
+      procedure RechercheDans (Noeud : not null PNoeud) is
       begin
          if Clef = Noeud.Clef then
             Element := Noeud.Element;
@@ -187,7 +194,7 @@ package body ArbMgr is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);
 
-      procedure Elimine (Noeud : PNoeud) is
+      procedure Elimine (Noeud : not null PNoeud) is
          Dum : PNoeud := Noeud;
       begin
          if Noeud.Gauche /= null then

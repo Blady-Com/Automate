@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : OutSrc.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.0b
+-- VERSION DU CSU                   : 2.2b
 -- DATE DE LA DERNIERE MISE A JOUR  : 8 mai 2001
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
@@ -21,13 +21,13 @@ with Ada.Unchecked_Deallocation;
 package body OutSrc is
 
    -- Ajout d'une chaîne sans changer de ligne.
-   procedure Add (Object : access TTextListMgr'Class; S : TText) is
+   procedure Add (Object : not null access TTextListMgr; S : TText) is
    begin
       Object.CurStr := Object.CurStr & S;
    end Add;
 
    -- Ajout d'une chaîne avec changement de ligne.
-   procedure AddNew (Object : access TTextListMgr'Class; S : TText) is
+   procedure AddNew (Object : not null access TTextListMgr; S : TText) is
    begin
       if Object.FirstElt = null then
          Object.FirstElt := new TTextList;
@@ -39,23 +39,23 @@ package body OutSrc is
       Object.CurStr      := Object.CurStr & S;
       Object.CurElt.Text := Object.CurStr;
       Object.CurElt.Next := null;
-      Object.CurStr      := To_Unbounded_String ("");
+      Object.CurStr      := Null_Unbounded_String;
    end AddNew;
 
    -- Ajout d'une chaîne sans changer de ligne.
-   procedure Add (Object : access TTextListMgr'Class; S : String) is
+   procedure Add (Object : not null access TTextListMgr; S : String) is
    begin
       Object.CurStr := Object.CurStr & S;
    end Add;
 
    -- Ajout d'une chaîne avec changement de ligne.
-   procedure AddNew (Object : access TTextListMgr'Class; S : String) is
+   procedure AddNew (Object : not null access TTextListMgr; S : String) is
    begin
       AddNew (Object, To_Unbounded_String (S));
    end AddNew;
 
    -- Ecriture du texte dans un fichier.
-   procedure WriteToFile (Object : access TTextListMgr'Class; F : File_Type) is
+   procedure WriteToFile (Object : not null access TTextListMgr; F : File_Type) is
       P : PTextList := Object.FirstElt;
    begin
       while P /= null loop
@@ -65,7 +65,10 @@ package body OutSrc is
    end WriteToFile;
 
    -- Transfert le texte dans un autre objet.
-   procedure CopyTo (Object : access TTextListMgr'Class; DstText : access TTextListMgr'Class) is
+   procedure CopyTo
+     (Object  : not null access TTextListMgr;
+      DstText : not null access TTextListMgr)
+   is
       Dum : PTextList := Object.FirstElt;
    begin
       while Dum /= null loop
@@ -78,7 +81,7 @@ package body OutSrc is
    end CopyTo;
 
    -- Procédure de destruction du texte.
-   procedure Done (Object : access TTextListMgr'Class) is
+   procedure Done (Object : not null access TTextListMgr) is
 
       procedure Free is new Ada.Unchecked_Deallocation (TTextList, PTextList);
 
@@ -88,7 +91,7 @@ package body OutSrc is
    begin
       while Dum /= null loop
          if Dum.Text /= "" then
-            Dum.Text := To_Unbounded_String ("");
+            Dum.Text := Null_Unbounded_String;
          end if;
          Dum2 := Dum;
          Free (Dum2);
@@ -96,11 +99,11 @@ package body OutSrc is
       end loop;
       Object.FirstElt := null;
       Object.CurElt   := null;
-      Object.CurStr   := To_Unbounded_String ("");
+      Object.CurStr   := Null_Unbounded_String;
    end Done;
 
    -- Ajoute un élément s'il ne l'a pas déjà été
-   procedure AddUniq (Object : access TEnumListMgr'Class; S : TText) is
+   procedure AddUniq (Object : not null access TEnumListMgr; S : TText) is
       P     : PTextList := Object.FirstElt;
       Found : Boolean   := False;
    begin
@@ -116,7 +119,7 @@ package body OutSrc is
    end AddUniq;
 
    -- Ecrit la liste sous forme d'un type énuméré
-   procedure TWriteToFile (Object : access TEnumListMgr'Class; F : File_Type) is
+   procedure TWriteToFile (Object : not null access TEnumListMgr; F : File_Type) is
       Cpt : Integer   := 0;
       P   : PTextList := Object.FirstElt;
    begin
@@ -131,7 +134,7 @@ package body OutSrc is
    end TWriteToFile;
 
    -- Ecrit la liste sous forme d'un appel de procédure
-   procedure AWriteToFile (Object : access TStateListMgr'Class; F : File_Type) is
+   procedure AWriteToFile (Object : not null access TStateListMgr; F : File_Type) is
       P : PTextList := Object.FirstElt;
    begin
       while P /= null loop
@@ -143,7 +146,7 @@ package body OutSrc is
    end AWriteToFile;
 
    -- Ecrit la liste sous forme d'un appel à la procedure de départ de l'automate
-   procedure CWriteToFile (Object : access TStateListMgr'Class; F : File_Type) is
+   procedure CWriteToFile (Object : not null access TStateListMgr; F : File_Type) is
    begin
       if Object.FirstElt /= null then
          Put_Line

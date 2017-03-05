@@ -1,9 +1,8 @@
-readme.txt :
-Archive automate-2.2a.tgz de la version 2.2a.
+Générateur Ada d'automates à états finis.
 
 1) les sources :
 
-. programme de génération d'automates :
+. programme de génération d'automates (src) :
 arbmgr.adb
 arbmgr.ads
 basicdef.adb
@@ -15,34 +14,34 @@ outsrc.adb
 outsrc.ads
 srcseq.adb
 srcseq.ads
-srcseq.in
 srcseq.auto
+srcseq.in
 
-. programme exemple :
+. programme exemple (robot) :
 eventmgr.adb
 eventmgr.ads
 robot.adb
 robseq.adb
 robseq.ads
-robseq.in
 robseq.auto
+robseq.in
 
 2) description :
 
   a) plateforme :
-Les programmes ont été compilés et testés avec GNAT GPL 2008 sur Mac OS X 10.4.
+Les programmes ont été compilés et testés avec GNAT GPL 2016 sur macOS 10.11.
 
   b) création des exécutables :
 Programme 'genauto' : gnatmake genauto.adb
-Programme 'robot'   : gnatmake -gnatW8 robot.adb
+Programme 'robot'   : cd robot; gnatmake -gnatW8 robot.adb
 (option -gnatW8 pour prendre correctement en compte les touches fléchées)
 
   c) mode d'emploi :
 Toutes les explications nécessaires au fonctionnement des programmes
 se trouve dans le texte Automate_Ada.pdf.
 Génération des package des automates srcseq et robseq :
-./genauto < srcseq.in
-./genauto < robseq.in
+cd src; ../obj/genauto < srcseq.in
+cd robot; ../obj/genauto < robseq.in
 L'affichage de chaque étape de la traduction s'active en positionnant à True
 la constante Debug dans genauto.adb.
 
@@ -60,6 +59,7 @@ Pour cela les fichiers sources des automates ont vu leur extension changée
 de ".txt" en ".auto".
 
 4) Historiques :
+- 2.2b : corrections mineures (perte de mémoire, suppression attribut class, vérification des null)
 - 2.2a : ajout de la prise en compte des commentaires d'une seule ligne
          commençant par --, les unités externes ne sont plus mises dans l'unité
          spécification générée, le mode Debug affiche les éléments chaînés
@@ -70,5 +70,5 @@ de ".txt" en ".auto".
 - 2.1a : deuxième version publique an Ada.
 - 1.0a : première version publique en Pascal.
 
-Pascal Pignard, mai 2001, janvier 2002, juillet 2008.
+Pascal Pignard, mai 2001, janvier 2002, juillet 2008, mars 2017.
 

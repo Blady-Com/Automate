@@ -148,7 +148,7 @@ from EV5
   event ErrId to EV6
     action `    StateToStr := To_Unbounded_String("stError");`
   event SameId to EV6
-    action `    StateToStr := To_Unbounded_String("");`
+    action `    StateToStr := Null_Unbounded_String;`
 
 { Définition des actions, d'un autre événement, d'un autre état ou de la fin de l'automate }
 from EV6
