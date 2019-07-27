@@ -19,7 +19,8 @@
 
 with Ada.Unchecked_Deallocation;
 package body ArbMgr with
-   SPARK_Mode
+   SPARK_Mode,
+   Refined_State => (ArbMgrState => (Arbre), OtherState => (CurElmt, Liste, AJour))
 is
 
    -- Définition d'un noeud pour la gestion de l'arbre binaire.
@@ -43,7 +44,9 @@ is
    type PTab is access TTab;
 
    -- Ajoute un élément à l'arbre binaire en le triant par l'ordre défini par la clef.
-   procedure Ajoute (Clef : TClef; Element : TElement) is
+   procedure Ajoute (Clef : TClef; Element : TElement) with
+      Refined_Global => (In_out => Arbre)
+   is
       NoeudNouveau : PNoeud;
 
       procedure AjouteDans (Noeud : not null PNoeud) with
@@ -69,9 +72,7 @@ is
 
    begin
       AJour        := False;
-      NoeudNouveau :=
-        new TNoeud'
-          (Gauche => null, Droit => null, Suivant => null, Clef => Clef, Element => Element);
+      NoeudNouveau := new TNoeud'(Gauche => null, Droit => null, Suivant => null, Clef => Clef, Element => Element);
       if Arbre /= null then
          AjouteDans (Arbre);
       else
@@ -80,7 +81,9 @@ is
    end Ajoute;
 
    -- Procédure qui balance l'arbre de façon à minimiser le temps de recherche
-   procedure Balance is
+   procedure Balance with
+      Refined_Global => (In_out => Arbre)
+   is
       Tab : PTab := null;
 
       procedure Free is new Ada.Unchecked_Deallocation (TTab, PTab);
@@ -142,7 +145,9 @@ is
    end Balance;
 
    -- Procédure qui recherche un élément dans l'arbre binaire et qui renvoie son Element.
-   procedure Recherche (Clef : TClef; Element : out TElement) is
+   procedure Recherche (Clef : TClef; Element : out TElement) with
+      Refined_Global => (In_out => Arbre)
+   is
       procedure RechercheDans (Noeud : not null PNoeud) is
       begin
          if Clef = Noeud.Clef then
@@ -194,7 +199,9 @@ is
    end RetourneSuivant;
 
    -- Procédure de destruction de l'arbre binaire.
-   procedure Detruit is
+   procedure Detruit with
+      Refined_Global => (In_out => Arbre)
+   is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);
 

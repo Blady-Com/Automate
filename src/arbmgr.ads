@@ -35,15 +35,20 @@ generic
    with function "<" (Left, Right : TClef) return Boolean is <>;
 
 package ArbMgr with
-   SPARK_Mode
+   SPARK_Mode,
+   Abstract_State => (ArbMgrState, OtherState)
 is
 
    -- Procédures assurant la gestion de l'arbre binaire.
-   procedure Ajoute (Clef : TClef; Element : TElement);
-   procedure Balance;
-   procedure Recherche (Clef : TClef; Element : out TElement);
+   procedure Ajoute (Clef : TClef; Element : TElement) with
+      Global => (In_out => ArbMgrState);
+   procedure Balance with
+      Global => (In_out => ArbMgrState);
+   procedure Recherche (Clef : TClef; Element : out TElement) with
+      Global => (In_out => ArbMgrState);
    function RetournePremier return TElement;
    function RetourneSuivant return TElement;
-   procedure Detruit;
+   procedure Detruit with
+      Global => (In_out => ArbMgrState);
 
 end ArbMgr;
