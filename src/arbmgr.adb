@@ -20,7 +20,7 @@
 with Ada.Unchecked_Deallocation;
 package body ArbMgr with
    SPARK_Mode,
-   Refined_State => (ArbMgrState => Arbre, ListeState => Liste, OtherState => (CurElmt, AJour))
+   Refined_State => (ArbMgrState => Arbre, ListeState => Liste, CurElmtState => CurElmt, OtherState => AJour)
 is
 
    -- Définition d'un noeud pour la gestion de l'arbre binaire.
@@ -179,7 +179,7 @@ is
 
    -- Fonction retournant le premier élément de la liste triée
    function RetournePremier return TElement with
-      Refined_Global => (Input => (Arbre, Liste))
+      Refined_Global => (Input => (Arbre, Liste, CurElmt))
    is
    begin
       if not AJour and then AutoBal then
@@ -194,7 +194,9 @@ is
    end RetournePremier;
 
    -- Fonction retournant l'élément suivant de la liste triée
-   function RetourneSuivant return TElement is
+   function RetourneSuivant return TElement with
+      Refined_Global => (Input => CurElmt)
+   is
    begin
       if CurElmt /= null then
          CurElmt := CurElmt.Suivant;
@@ -208,7 +210,7 @@ is
 
    -- Procédure de destruction de l'arbre binaire.
    procedure Detruit with
-      Refined_Global => (In_Out => Arbre, Output => Liste)
+      Refined_Global => (In_Out => Arbre, Output => (Liste, CurElmt))
    is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);

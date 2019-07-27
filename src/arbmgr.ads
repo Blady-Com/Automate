@@ -36,7 +36,7 @@ generic
 
 package ArbMgr with
    SPARK_Mode,
-   Abstract_State => (ArbMgrState, ListeState, OtherState)
+   Abstract_State => (ArbMgrState, ListeState, CurElmtState, OtherState)
 is
 
    -- Procédures assurant la gestion de l'arbre binaire.
@@ -47,9 +47,10 @@ is
    procedure Recherche (Clef : TClef; Element : out TElement) with
       Global => (In_Out => ArbMgrState, OutPut => ListeState);
    function RetournePremier return TElement with
-      Global => (Input => (ArbMgrState, ListeState));
-   function RetourneSuivant return TElement;
+      Global => (Input => (ArbMgrState, ListeState, CurElmtState));
+   function RetourneSuivant return TElement with
+      Global => (Input => CurElmtState);
    procedure Detruit with
-      Global => (In_Out => ArbMgrState, OutPut => ListeState);
+      Global => (In_Out => ArbMgrState, OutPut => (ListeState, CurElmtState));
 
 end ArbMgr;
