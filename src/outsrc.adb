@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : OutSrc.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 8 mai 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
 --
@@ -18,7 +18,9 @@
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
-package body OutSrc is
+package body OutSrc with
+   SPARK_Mode
+is
 
    -- Ajout d'une chaîne sans changer de ligne.
    procedure Add (Object : not null access TTextListMgr; S : TText) is
@@ -65,10 +67,7 @@ package body OutSrc is
    end WriteToFile;
 
    -- Transfert le texte dans un autre objet.
-   procedure CopyTo
-     (Object  : not null access TTextListMgr;
-      DstText : not null access TTextListMgr)
-   is
+   procedure CopyTo (Object : not null access TTextListMgr; DstText : not null access TTextListMgr) is
       Dum : PTextList := Object.FirstElt;
    begin
       while Dum /= null loop
@@ -138,9 +137,7 @@ package body OutSrc is
       P : PTextList := Object.FirstElt;
    begin
       while P /= null loop
-         Put_Line
-           (F,
-            "      when " & To_String (P.Text) & " => Action" & To_String (P.Text) & ";");
+         Put_Line (F, "      when " & To_String (P.Text) & " => Action" & To_String (P.Text) & ";");
          P := P.Next;
       end loop;
    end AWriteToFile;
@@ -151,10 +148,7 @@ package body OutSrc is
       if Object.FirstElt /= null then
          Put_Line
            (F,
-            "  Automate(" &
-            To_String (Object.FirstElt.Text) &
-            ", Event, " &
-            To_String (EventDesStr) &
+            "  Automate(" & To_String (Object.FirstElt.Text) & ", Event, " & To_String (EventDesStr) &
             ", Result, Debug);");
       end if;
    end CWriteToFile;

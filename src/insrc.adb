@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : InSrc.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 8 juin 2008
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion des textes sources.
 --
 --
@@ -24,7 +24,9 @@ with Ada.Strings.Maps;           use Ada.Strings.Maps;
 with Ada.Characters.Latin_1;
 with Ada.Strings.Maps.Constants; use Ada.Strings.Maps.Constants;
 
-package body InSrc is
+package body InSrc with
+   SPARK_Mode
+is
 
    Asciinul : constant Character := ASCII.NUL;
    Asciietx : constant Character := ASCII.ETX;
@@ -48,11 +50,7 @@ package body InSrc is
    Chiffrecharset : constant Character_Set := Decimal_Digit_Set;
    Hexacharset    : constant Character_Set := Hexadecimal_Digit_Set;
    Blanccharset   : constant Character_Set :=
-     (To_Set (Asciibel) or
-      To_Set (Asciitab) or
-      To_Set (Asciilf) or
-      To_Set (Asciiff) or
-      To_Set (Asciicr) or
+     (To_Set (Asciibel) or To_Set (Asciitab) or To_Set (Asciilf) or To_Set (Asciiff) or To_Set (Asciicr) or
       To_Set (Asciisp)) and
      not To_Set (Newlinechar);
 
@@ -75,8 +73,7 @@ package body InSrc is
    exception
       when E : others =>
          Raise_Exception
-           (Exception_Identity (E),
-            "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
+           (Exception_Identity (E), "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
    end FileRead;
 
    -- Procédure de lecture du contenu du fichier source.
@@ -94,9 +91,7 @@ package body InSrc is
       Object.ChTemp := Element (Object.TextBuff, 1);
    exception
       when E : others =>
-         Raise_Exception
-           (Exception_Identity (E),
-            "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
+         Raise_Exception (Exception_Identity (E), "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
    end Open;
 
    -- Procédure de lecture d'un caractère du buffer contenant le texte source.

@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : OutSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
 --
@@ -20,7 +20,9 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with BasicDef;    use BasicDef;
 
-package OutSrc is
+package OutSrc with
+   SPARK_Mode
+is
 
    -- Objet assurant l'écriture du package Ada
    type TTextListMgr is tagged private;
@@ -31,9 +33,7 @@ package OutSrc is
    procedure AddNew (Object : not null access TTextListMgr; S : TText);
    procedure AddNew (Object : not null access TTextListMgr; S : String);
    procedure WriteToFile (Object : not null access TTextListMgr; F : File_Type);
-   procedure CopyTo
-     (Object  : not null access TTextListMgr;
-      DstText : not null access TTextListMgr);
+   procedure CopyTo (Object : not null access TTextListMgr; DstText : not null access TTextListMgr);
    procedure Done (Object : not null access TTextListMgr);
 
    -- Objet assurant l'écriture d'énumérés
@@ -81,16 +81,12 @@ package OutSrc is
    CallUnitList : PEnumListMgr;
 
    FlLocalDefault, FlDefaultDefault, FlGosub : Boolean;
-   TEventStr,
-   EventDesStr,
-   TEventDesStr,
-   NullEventStr,
-   StateToStr,
-   GetEventStr,
-   UserUnitStr : TText;
-   AName       : TText;
-   NomFich     : TText;
-   LigneFich   : Natural;
+
+   TEventStr, EventDesStr, TEventDesStr, NullEventStr, StateToStr, GetEventStr, UserUnitStr : TText;
+
+   AName     : TText;
+   NomFich   : TText;
+   LigneFich : Natural;
 
 private
 

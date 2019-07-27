@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : ArbMgr.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.0b
--- DATE DE LA DERNIERE MISE A JOUR  : 1 mai 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion d'un arbre binaire.
 --
 --
@@ -34,7 +34,9 @@ generic
    -- Relation d'ordre de la clef de tri
    with function "<" (Left, Right : TClef) return Boolean is <>;
 
-package ArbMgr is
+package ArbMgr with
+   SPARK_Mode
+is
 
    -- Procédures assurant la gestion de l'arbre binaire.
    procedure Ajoute (Clef : TClef; Element : TElement);

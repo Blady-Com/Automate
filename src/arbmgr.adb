@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : ArbMgr.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 6 mai 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion d'un arbre binaire.
 --
 --
@@ -18,7 +18,9 @@
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
-package body ArbMgr is
+package body ArbMgr with
+   SPARK_Mode
+is
 
    -- Définition d'un noeud pour la gestion de l'arbre binaire.
    type TNoeud;

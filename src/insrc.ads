@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : InSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2019
 -- ROLE DU CSU                      : Unité de gestion des textes sources.
 --
 --
@@ -21,7 +21,9 @@ with Ada.Direct_IO;
 with ArbMgr;
 with BasicDef; use BasicDef;
 
-package InSrc is
+package InSrc with
+   SPARK_Mode
+is
 
    -- Objet assurant la gestion du fichier source.
    type TSourceMgr is tagged limited private;
@@ -34,32 +36,8 @@ package InSrc is
 
    -- Eléments lexicaux
    type TTokenId is
-     (NullId,
-      EotId,
-      NewlineId,
-      ErrorId,
-      UnknownId,
-      CallId,
-      CarId,
-      CommentId,
-      UndefId,
-
-      AutomId,
-      DefaultId,
-      OutId,
-      ErrId,
-      FromId,
-      InitId,
-      EventId,
-      ActionId,
-      VirgId,
-      PlusId,
-      PointpointId,
-      ToId,
-
-      GosubId,
-      EndId,
-      SameId);
+     (NullId, EotId, NewlineId, ErrorId, UnknownId, CallId, CarId, CommentId, UndefId, AutomId, DefaultId, OutId, ErrId,
+      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId, GosubId, EndId, SameId);
 
    -- Contexte de l'élément lexical
    subtype Ttokenstr is TText;
