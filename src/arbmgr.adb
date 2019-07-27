@@ -20,7 +20,7 @@
 with Ada.Unchecked_Deallocation;
 package body ArbMgr with
    SPARK_Mode,
-   Refined_State => (ArbMgrState => (Arbre), OtherState => (CurElmt, Liste, AJour))
+   Refined_State => (ArbMgrState => Arbre, ListeState => Liste, OtherState => (CurElmt, AJour))
 is
 
    -- Définition d'un noeud pour la gestion de l'arbre binaire.
@@ -45,7 +45,7 @@ is
 
    -- Ajoute un élément à l'arbre binaire en le triant par l'ordre défini par la clef.
    procedure Ajoute (Clef : TClef; Element : TElement) with
-      Refined_Global => (In_out => Arbre)
+      Refined_Global => (In_Out => Arbre)
    is
       NoeudNouveau : PNoeud;
 
@@ -82,7 +82,7 @@ is
 
    -- Procédure qui balance l'arbre de façon à minimiser le temps de recherche
    procedure Balance with
-      Refined_Global => (In_out => Arbre)
+      Refined_Global => (In_Out => Arbre, Output => Liste)
    is
       Tab : PTab := null;
 
@@ -152,7 +152,7 @@ is
 
    -- Procédure qui recherche un élément dans l'arbre binaire et qui renvoie son Element.
    procedure Recherche (Clef : TClef; Element : out TElement) with
-      Refined_Global => (In_out => Arbre)
+      Refined_Global => (In_Out => Arbre, Output => Liste)
    is
       procedure RechercheDans (Noeud : not null PNoeud) is
       begin
@@ -178,7 +178,9 @@ is
    end Recherche;
 
    -- Fonction retournant le premier élément de la liste triée
-   function RetournePremier return TElement is
+   function RetournePremier return TElement with
+      Refined_Global => (Input => (Arbre, Liste))
+   is
    begin
       if not AJour and then AutoBal then
          Balance;
@@ -206,7 +208,7 @@ is
 
    -- Procédure de destruction de l'arbre binaire.
    procedure Detruit with
-      Refined_Global => (In_out => Arbre)
+      Refined_Global => (In_Out => Arbre, Output => Liste)
    is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);

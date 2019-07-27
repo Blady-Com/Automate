@@ -36,19 +36,20 @@ generic
 
 package ArbMgr with
    SPARK_Mode,
-   Abstract_State => (ArbMgrState, OtherState)
+   Abstract_State => (ArbMgrState, ListeState, OtherState)
 is
 
    -- Procédures assurant la gestion de l'arbre binaire.
    procedure Ajoute (Clef : TClef; Element : TElement) with
-      Global => (In_out => ArbMgrState);
+      Global => (In_Out => ArbMgrState);
    procedure Balance with
-      Global => (In_out => ArbMgrState);
+      Global => (In_Out => ArbMgrState, OutPut => ListeState);
    procedure Recherche (Clef : TClef; Element : out TElement) with
-      Global => (In_out => ArbMgrState);
-   function RetournePremier return TElement;
+      Global => (In_Out => ArbMgrState, OutPut => ListeState);
+   function RetournePremier return TElement with
+      Global => (Input => (ArbMgrState, ListeState));
    function RetourneSuivant return TElement;
    procedure Detruit with
-      Global => (In_out => ArbMgrState);
+      Global => (In_Out => ArbMgrState, OutPut => ListeState);
 
 end ArbMgr;
