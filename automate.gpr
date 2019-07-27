@@ -9,7 +9,7 @@ project Automate is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnatVa", "-gnatwa", "-g", "-gnato", "-fstack-check", "-gnatE", "-gnatf", "-gnatW8", "-gnateE");
+      for Default_Switches ("ada") use ("-gnatw.eH.YD", "-gnato", "-gnatf", "-gnatU", "-fstack-check", "-Wall", "-g", "-gnata", "-gnatVaep", "-gnateA", "-gnateE", "-gnateF", "-gnateV");
    end Compiler;
 
    package Linker is
@@ -17,11 +17,11 @@ project Automate is
    end Linker;
 
    package Binder is
-      for Default_Switches ("ada") use ("-E");
+      for Default_Switches ("ada") use ("-Es");
    end Binder;
 
    package Pretty_Printer is
-      for Default_Switches ("ada") use ("-M99", "-W8");
+      for Default_Switches ("ada") use ("-M120", "-W8");
    end Pretty_Printer;
 
 end Automate;
