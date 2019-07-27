@@ -46,7 +46,9 @@ is
    procedure Ajoute (Clef : TClef; Element : TElement) is
       NoeudNouveau : PNoeud;
 
-      procedure AjouteDans (Noeud : not null PNoeud) is
+      procedure AjouteDans (Noeud : not null PNoeud) with
+         Global => (Input => NoeudNouveau)
+      is
       begin
          if Clef /= Noeud.Clef then
             if Clef < Noeud.Clef then
