@@ -139,7 +139,9 @@ is
       Ch, ChSuivant : Character;
 
       -- Lit une chaîne de caractères.
-      procedure ReadChaine is
+      procedure ReadChaine with
+         Global => (Input => SrcAuto)
+      is
       begin
          Read (SrcAuto, Ch, ChSuivant);
          while Is_In (Ch, Normasciicharset) loop
@@ -170,7 +172,9 @@ is
       end ReadChaine;
 
       -- Lit un commentaire.
-      procedure ReadComment is
+      procedure ReadComment with
+         Global => (Input => SrcAuto)
+      is
          Enr : Boolean := True;
       begin
          if Ch = '(' then
@@ -207,7 +211,9 @@ is
       end ReadComment;
 
       -- Lit un commentaire d'une ligne.
-      procedure ReadCommentSingleLine is
+      procedure ReadCommentSingleLine with
+         Global => (Input => SrcAuto)
+      is
       begin
          if Ch = '-' then
             Read (SrcAuto, Ch, ChSuivant);
@@ -230,7 +236,9 @@ is
       end ReadCommentSingleLine;
 
       -- Lit un identificateur.
-      procedure ReadIdent is
+      procedure ReadIdent with
+         Global => (Input => SrcAuto)
+      is
       begin
          Token := Token & Ch;
          while Is_In (ChSuivant, Identcharset) loop
