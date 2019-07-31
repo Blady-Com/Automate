@@ -19,33 +19,34 @@
 
 with Ada.Unchecked_Deallocation;
 package body ArbMgr with
-   SPARK_Mode,
-   Refined_State => (ArbMgrState => Arbre, ListeState => Liste, CurElmtState => CurElmt, OtherState => AJour)
+   SPARK_Mode
+--     Refined_State => (ArbMgrState => Arbre, ListeState => Liste, CurElmtState => CurElmt, OtherState => AJour)
 is
 
-   -- Définition d'un noeud pour la gestion de l'arbre binaire.
-   type TNoeud;
-   type PNoeud is access TNoeud;
-   type TNoeud is record
-      Gauche  : PNoeud;       -- branche inférieure de l'arbre
-      Droit   : PNoeud;       -- branche supérieure de l'arbre
-      Suivant : PNoeud;       -- liste croissante
-      Clef    : TClef;        -- clef de comparaison
-      Element : TElement;     -- stockage de l'élément à trier ou à rechercher
-   end record;
-
-   Arbre   : PNoeud  := null;
-   CurElmt : PNoeud  := null;
-   Liste   : PNoeud  := null;
-   AJour   : Boolean := False;
+--     -- Définition d'un noeud pour la gestion de l'arbre binaire.
+--     type TNoeud;
+--     type PNoeud is access TNoeud;
+--     type TNoeud is record
+--        Gauche  : PNoeud;       -- branche inférieure de l'arbre
+--        Droit   : PNoeud;       -- branche supérieure de l'arbre
+--        Suivant : PNoeud;       -- liste croissante
+--        Clef    : TClef;        -- clef de comparaison
+--        Element : TElement;     -- stockage de l'élément à trier ou à rechercher
+--     end record;
+--
+--     Arbre   : PNoeud  := null;
+--     CurElmt : PNoeud  := null;
+--     Liste   : PNoeud  := null;
+--     AJour   : Boolean := False;
 
    -- Définition du tableau pour le ré-équilibrage de l'arbre
    type TTab is array (Positive range <>) of PNoeud;
    type PTab is access TTab;
 
    -- Ajoute un élément à l'arbre binaire en le triant par l'ordre défini par la clef.
-   procedure Ajoute (Clef : TClef; Element : TElement) with
-      Refined_Global => (In_Out => Arbre)
+   procedure Ajoute (Clef : TClef; Element : TElement) -- with
+--        Refined_Global => (In_Out => Arbre)
+
    is
       NoeudNouveau : PNoeud;
 
@@ -81,8 +82,9 @@ is
    end Ajoute;
 
    -- Procédure qui balance l'arbre de façon à minimiser le temps de recherche
-   procedure Balance with
-      Refined_Global => (In_Out => Arbre, Output => Liste)
+   procedure Balance -- with
+--        Refined_Global => (In_Out => Arbre, Output => Liste)
+
    is
       Tab : PTab := null;
 
@@ -151,8 +153,9 @@ is
    end Balance;
 
    -- Procédure qui recherche un élément dans l'arbre binaire et qui renvoie son Element.
-   procedure Recherche (Clef : TClef; Element : out TElement) with
-      Refined_Global => (In_Out => Arbre, Output => Liste)
+   procedure Recherche (Clef : TClef; Element : out TElement) -- with
+--        Refined_Global => (In_Out => Arbre, Output => Liste)
+
    is
       procedure RechercheDans (Noeud : not null PNoeud) is
       begin
@@ -178,8 +181,9 @@ is
    end Recherche;
 
    -- Fonction retournant le premier élément de la liste triée
-   function RetournePremier return TElement with
-      Refined_Global => (Input => (Arbre, Liste, CurElmt))
+   function RetournePremier return TElement -- with
+--        Refined_Global => (Input => (Arbre, Liste, CurElmt))
+
    is
    begin
       if not AJour and then AutoBal then
@@ -194,8 +198,9 @@ is
    end RetournePremier;
 
    -- Fonction retournant l'élément suivant de la liste triée
-   function RetourneSuivant return TElement with
-      Refined_Global => (Input => CurElmt)
+   function RetourneSuivant return TElement -- with
+--        Refined_Global => (Input => CurElmt)
+
    is
    begin
       if CurElmt /= null then
@@ -209,8 +214,9 @@ is
    end RetourneSuivant;
 
    -- Procédure de destruction de l'arbre binaire.
-   procedure Detruit with
-      Refined_Global => (In_Out => Arbre, Output => (Liste, CurElmt))
+   procedure Detruit -- with
+--        Refined_Global => (In_Out => Arbre, Output => (Liste, CurElmt))
+
    is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);
