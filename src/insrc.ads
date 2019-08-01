@@ -43,7 +43,8 @@ is
    subtype Ttokenstr is TText;
 
    -- Lit un ou plusieurs caractères dans le texte source et le ou les transforme en éléments lexicaux.
-   procedure ReadToken (TokenId : out TTokenId; Token : out Ttokenstr);
+   procedure ReadToken (TokenId : out TTokenId; Token : out Ttokenstr) with
+      Global => (Input => SrcAuto, In_Out => IdAuto.Arbre, Output => IdAuto.Liste);
 
    -- Référence du package assurant la gestion des mots clés
    package IdAuto is new ArbMgr (TText, TTokenId, UndefId);

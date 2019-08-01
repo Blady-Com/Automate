@@ -237,7 +237,7 @@ is
 
       -- Lit un identificateur.
       procedure ReadIdent with
-         Global => (Input => SrcAuto)
+         Global => (Input => SrcAuto, In_Out => IdAuto.Arbre, Output => IdAuto.Liste)
       is
       begin
          Token := Token & Ch;
