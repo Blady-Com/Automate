@@ -140,7 +140,7 @@ is
 
       -- Lit une chaîne de caractères.
       procedure ReadChaine with
-         Global => (Input => SrcAuto)
+         Global => (In_Out => SrcAuto)
       is
       begin
          Read (SrcAuto, Ch, ChSuivant);
@@ -173,7 +173,7 @@ is
 
       -- Lit un commentaire.
       procedure ReadComment with
-         Global => (Input => SrcAuto)
+         Global => (In_Out => SrcAuto)
       is
          Enr : Boolean := True;
       begin
@@ -212,7 +212,7 @@ is
 
       -- Lit un commentaire d'une ligne.
       procedure ReadCommentSingleLine with
-         Global => (Input => SrcAuto)
+         Global => (In_Out => SrcAuto)
       is
       begin
          if Ch = '-' then
@@ -237,7 +237,7 @@ is
 
       -- Lit un identificateur.
       procedure ReadIdent with
-         Global => (Input => SrcAuto, In_Out => IdAuto.Arbre, Output => IdAuto.Liste)
+         Global => (In_Out => (SrcAuto, IdAuto.Arbre), Output => IdAuto.Liste)
       is
       begin
          Token := Token & Ch;
