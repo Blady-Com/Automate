@@ -103,7 +103,7 @@ is
             declare
                AncienTab : PTab := Tab;
             begin
-               Tab := new TTab'(Tab (Tab'Range) & Noeud);  -- les suivants
+               Tab := new TTab'(AncienTab (AncienTab'Range) & Noeud);  -- les suivants
                Free (AncienTab);
             end;
          end if;
