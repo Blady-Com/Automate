@@ -25,7 +25,7 @@ with Ada.Characters.Latin_1;
 with Ada.Strings.Maps.Constants; use Ada.Strings.Maps.Constants;
 
 package body InSrc with
-   SPARK_Mode
+   SPARK_Mode => Off
 is
 
    Asciinul : constant Character := ASCII.NUL;

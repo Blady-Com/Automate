@@ -17,7 +17,7 @@
 --
 --------------------------------------------------------------------------------
 
-with Ada.Direct_IO;
+private with Ada.Direct_IO;
 with ArbMgr;
 with BasicDef; use BasicDef;
 
@@ -52,6 +52,8 @@ is
    SrcAuto : PSourceMgr;     -- Référence de l'objet assurant la gestion du texte source de l'automate
 
 private
+
+   pragma SPARK_Mode (Off);
 
    package SrcFile is new Ada.Direct_IO (Character);
 
