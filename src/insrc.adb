@@ -18,7 +18,7 @@
 --------------------------------------------------------------------------------
 
 with Ada.Text_IO;                use Ada.Text_IO;
-with Ada.Exceptions;             use Ada.Exceptions;
+--  with Ada.Exceptions;             use Ada.Exceptions;
 with Ada.Characters.Handling;    use Ada.Characters.Handling;
 with Ada.Strings.Maps;           use Ada.Strings.Maps;
 with Ada.Characters.Latin_1;
@@ -70,10 +70,10 @@ is
          SrcFile.Read (F, Ch);
          Append (Buffer, Ch);
       end loop;
-   exception
-      when E : others =>
-         Raise_Exception
-           (Exception_Identity (E), "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
+--     exception
+--        when E : others =>
+--           Raise_Exception
+--             (Exception_Identity (E), "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
    end FileRead;
 
    -- Procédure de lecture du contenu du fichier source.
@@ -89,9 +89,9 @@ is
       SrcFile.Close (Object.FRef);
       Append (Object.TextBuff, Asciieot);
       Object.ChTemp := Element (Object.TextBuff, 1);
-   exception
-      when E : others =>
-         Raise_Exception (Exception_Identity (E), "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
+--     exception
+--        when E : others =>
+--           Raise_Exception (Exception_Identity (E), "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
    end Open;
 
    -- Procédure de lecture d'un caractère du buffer contenant le texte source.
