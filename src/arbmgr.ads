@@ -66,12 +66,12 @@ is
    procedure Recherche (Clef : TClef; Element : out TElement) with
 --        Global => (In_Out => ArbMgrState, Output => ListeState);
       Global => (In_Out => Arbre, Output => Liste);
-   function RetournePremier return TElement with
+   procedure RetournePremier (Element : out TElement) with
 --        Global => (Input => (ArbMgrState, ListeState, CurElmtState));
-      Global => (Input => (Arbre, Liste, CurElmt));
-   function RetourneSuivant return TElement with
+      Global => (In_Out => (Arbre, Liste, CurElmt));
+   procedure RetourneSuivant (Element : out TElement) with
 --        Global => (Input => CurElmtState);
-      Global => (Input => CurElmt);
+      Global => (In_Out => CurElmt);
    procedure Detruit with
 --        Global => (In_Out => ArbMgrState, Output => (ListeState, CurElmtState));
       Global => (In_Out => Arbre, Output => (Liste, CurElmt));

@@ -180,8 +180,8 @@ is
       end if;
    end Recherche;
 
-   -- Fonction retournant le premier élément de la liste triée
-   function RetournePremier return TElement -- with
+   -- Procédure retournant le premier élément de la liste triée
+   procedure RetournePremier (Element : out TElement) -- with
 --        Refined_Global => (Input => (Arbre, Liste, CurElmt))
 
    is
@@ -191,14 +191,14 @@ is
       end if;
       CurElmt := Liste;
       if CurElmt /= null then
-         return CurElmt.Element;
+         Element := CurElmt.Element;
       else
-         return NonDefini;
+         Element := NonDefini;
       end if;
    end RetournePremier;
 
-   -- Fonction retournant l'élément suivant de la liste triée
-   function RetourneSuivant return TElement -- with
+   -- Procédure retournant l'élément suivant de la liste triée
+   procedure RetourneSuivant (Element : out TElement) -- with
 --        Refined_Global => (Input => CurElmt)
 
    is
@@ -207,9 +207,9 @@ is
          CurElmt := CurElmt.Suivant;
       end if;
       if CurElmt /= null then
-         return CurElmt.Element;
+         Element := CurElmt.Element;
       else
-         return NonDefini;
+         Element := NonDefini;
       end if;
    end RetourneSuivant;
 
