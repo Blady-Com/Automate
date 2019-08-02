@@ -91,7 +91,7 @@ is
       procedure Free is new Ada.Unchecked_Deallocation (TTab, PTab);
 
       procedure PlaceDansTab (Noeud : not null PNoeud) with
-         Global => (Input => Tab)
+         Global => (In_Out => Tab)
       is
       begin
          if Noeud.Gauche /= null then
