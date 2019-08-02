@@ -222,7 +222,6 @@ is
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);
 
       procedure Elimine (Noeud : not null PNoeud) is
-         Dum : PNoeud := Noeud;
       begin
          if Noeud.Gauche /= null then
             Elimine (Noeud.Gauche);
@@ -230,7 +229,11 @@ is
          if Noeud.Droit /= null then
             Elimine (Noeud.Droit);
          end if;
-         Free (Dum);
+         declare
+            Dum : PNoeud := Noeud;
+         begin
+            Free (Dum);
+         end;
       end Elimine;
 
    begin
