@@ -190,6 +190,7 @@ is
          Balance;
       end if;
       CurElmt := Liste;
+      Liste   := null;  --  Relache l'accès
       if CurElmt /= null then
          Element := CurElmt.Element;
       else
