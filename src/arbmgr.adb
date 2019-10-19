@@ -51,7 +51,7 @@ is
       NoeudNouveau : PNoeud;
 
       procedure AjouteDans (Noeud : not null PNoeud) with
-         Global => (Input => (NoeudNouveau, Clef))
+         Global => (In_Out => NoeudNouveau, Input => Clef)
       is
       begin
          if Clef /= Noeud.Clef then
@@ -69,6 +69,7 @@ is
                end if;
             end if;
          end if;
+         NoeudNouveau := null; --  Relache l'accès
       end AjouteDans;
 
    begin
@@ -79,6 +80,7 @@ is
       else
          Arbre := NoeudNouveau;
       end if;
+      NoeudNouveau := null; --  Relache l'accès
    end Ajoute;
 
    -- Procédure qui balance l'arbre de façon à minimiser le temps de recherche
