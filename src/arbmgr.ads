@@ -43,11 +43,11 @@ is
    procedure Ajoute (Clef : TClef; Element : TElement) with
       Global => (In_Out => ArbMgrState);
    procedure Balance with
-      Global => (In_Out => ArbMgrState, Output => ListeState);
+      Global => (In_Out => (ArbMgrState, ListeState));
    procedure Recherche (Clef : TClef; Element : out TElement) with
-      Global => (In_Out => ArbMgrState, Output => ListeState);
+      Global => (In_Out => (ArbMgrState, ListeState));
    procedure RetournePremier (Element : out TElement) with
-      Global => (In_Out => ArbMgrState, Output => (ListeState, CurElmtState));
+      Global => (In_Out => (ArbMgrState, ListeState), Output => CurElmtState);
    procedure RetourneSuivant (Element : out TElement) with
       Global => (In_Out => CurElmtState);
    procedure Detruit with
