@@ -17,7 +17,7 @@
 --
 --------------------------------------------------------------------------------
 
-with Ada.Text_IO;                use Ada.Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
 --  with Ada.Exceptions;             use Ada.Exceptions;
 with Ada.Characters.Handling;    use Ada.Characters.Handling;
 with Ada.Strings.Maps;           use Ada.Strings.Maps;
@@ -237,7 +237,7 @@ is
 
       -- Lit un identificateur.
       procedure ReadIdent with
-         Global => (In_Out => (SrcAuto, IdAuto.Arbre), Output => IdAuto.Liste)
+         Global => (In_Out => (SrcAuto))
       is
       begin
          Token := Token & Ch;

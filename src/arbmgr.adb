@@ -19,25 +19,25 @@
 
 with Ada.Unchecked_Deallocation;
 package body ArbMgr with
-   SPARK_Mode
---     Refined_State => (ArbMgrState => Arbre, ListeState => Liste, CurElmtState => CurElmt, OtherState => AJour)
+   SPARK_Mode,
+   Refined_State => (ArbMgrState => (Arbre, AJour), ListeState => Liste, CurElmtState => CurElmt)
 is
 
---     -- Définition d'un noeud pour la gestion de l'arbre binaire.
---     type TNoeud;
---     type PNoeud is access TNoeud;
---     type TNoeud is record
---        Gauche  : PNoeud;       -- branche inférieure de l'arbre
---        Droit   : PNoeud;       -- branche supérieure de l'arbre
---        Suivant : PNoeud;       -- liste croissante
---        Clef    : TClef;        -- clef de comparaison
---        Element : TElement;     -- stockage de l'élément à trier ou à rechercher
---     end record;
---
---     Arbre   : PNoeud  := null;
---     CurElmt : PNoeud  := null;
---     Liste   : PNoeud  := null;
---     AJour   : Boolean := False;
+   -- Définition d'un noeud pour la gestion de l'arbre binaire.
+   type TNoeud;
+   type PNoeud is access TNoeud;
+   type TNoeud is record
+      Gauche  : PNoeud;       -- branche inférieure de l'arbre
+      Droit   : PNoeud;       -- branche supérieure de l'arbre
+      Suivant : PNoeud;       -- liste croissante
+      Clef    : TClef;        -- clef de comparaison
+      Element : TElement;     -- stockage de l'élément à trier ou à rechercher
+   end record;
+
+   Arbre   : PNoeud  := null;
+   CurElmt : PNoeud  := null;
+   Liste   : PNoeud  := null;
+   AJour   : Boolean := False;
 
    -- Définition du tableau pour le ré-équilibrage de l'arbre
    type TTab is array (Positive range <>) of PNoeud;
@@ -51,7 +51,7 @@ is
       NoeudNouveau : PNoeud;
 
       procedure AjouteDans (Noeud : not null PNoeud) with
-         Global => (Input => NoeudNouveau)
+         Global => (Input => (NoeudNouveau, Clef))
       is
       begin
          if Clef /= Noeud.Clef then
@@ -113,7 +113,7 @@ is
       end PlaceDansTab;
 
       procedure PlaceDansArbre (Noeud : out PNoeud; Premier, Dernier : Positive) with
-         Global => (Input => Tab)
+         Global => (In_Out => Tab)
       is
          Index : Positive;
       begin
@@ -132,7 +132,7 @@ is
       end PlaceDansArbre;
 
       procedure PlaceDansListe (Noeud : out PNoeud) with
-         Global => (Input => Tab)
+         Global => (In_Out => Tab)
       is
       begin
          Noeud := Tab (Tab'First);

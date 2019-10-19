@@ -44,7 +44,7 @@ is
 
    -- Lit un ou plusieurs caractères dans le texte source et le ou les transforme en éléments lexicaux.
    procedure ReadToken (TokenId : out TTokenId; Token : out Ttokenstr) with
-      Global => (In_Out => (SrcAuto, IdAuto.Arbre), Output => IdAuto.Liste);
+      Global => (In_Out => (SrcAuto));
 
       -- Référence du package assurant la gestion des mots clés
    package IdAuto is new ArbMgr (TText, TTokenId, UndefId);
