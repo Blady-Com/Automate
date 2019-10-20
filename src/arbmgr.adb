@@ -44,10 +44,7 @@ is
    type PTab is access TTab;
 
    -- Ajoute un élément à l'arbre binaire en le triant par l'ordre défini par la clef.
-   procedure Ajoute (Clef : TClef; Element : TElement) -- with
---        Refined_Global => (In_Out => Arbre)
-
-   is
+   procedure Ajoute (Clef : TClef; Element : TElement) is
       NoeudNouveau : PNoeud;
 
       procedure AjouteDans (Noeud : not null PNoeud) with
@@ -84,10 +81,7 @@ is
    end Ajoute;
 
    -- Procédure qui balance l'arbre de façon à minimiser le temps de recherche
-   procedure Balance -- with
---        Refined_Global => (In_Out => Arbre, Output => Liste)
-
-   is
+   procedure Balance is
       Tab : PTab := null;
 
       procedure Free is new Ada.Unchecked_Deallocation (TTab, PTab);
@@ -157,10 +151,7 @@ is
    end Balance;
 
    -- Procédure qui recherche un élément dans l'arbre binaire et qui renvoie son Element.
-   procedure Recherche (Clef : TClef; Element : out TElement) -- with
---        Refined_Global => (In_Out => Arbre, Output => Liste)
-
-   is
+   procedure Recherche (Clef : TClef; Element : out TElement) is
       procedure RechercheDans (Noeud : not null PNoeud) is
       begin
          if Clef = Noeud.Clef then
@@ -185,10 +176,7 @@ is
    end Recherche;
 
    -- Procédure retournant le premier élément de la liste triée
-   procedure RetournePremier (Element : out TElement) -- with
---        Refined_Global => (Input => (Arbre, Liste, CurElmt))
-
-   is
+   procedure RetournePremier (Element : out TElement) is
    begin
       if not AJour and then AutoBal then
          Balance;
@@ -203,10 +191,7 @@ is
    end RetournePremier;
 
    -- Procédure retournant l'élément suivant de la liste triée
-   procedure RetourneSuivant (Element : out TElement) -- with
---        Refined_Global => (Input => CurElmt)
-
-   is
+   procedure RetourneSuivant (Element : out TElement) is
    begin
       if CurElmt /= null then
          CurElmt := CurElmt.Suivant;
@@ -219,10 +204,7 @@ is
    end RetourneSuivant;
 
    -- Procédure de destruction de l'arbre binaire.
-   procedure Detruit -- with
---        Refined_Global => (In_Out => Arbre, Output => (Liste, CurElmt))
-
-   is
+   procedure Detruit is
 
       procedure Free is new Ada.Unchecked_Deallocation (TNoeud, PNoeud);
 
