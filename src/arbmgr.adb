@@ -92,15 +92,16 @@ is
 
       procedure Free is new Ada.Unchecked_Deallocation (TTab, PTab);
 
-      procedure PlaceDansTab (Noeud : not null PNoeud) with
+      procedure PlaceDansTab (Noeud : in out PNoeud) with
          Global => (In_Out => Tab)
       is
+         TabVide : TTab (2 .. 1);
       begin
          if Noeud.Gauche /= null then
             PlaceDansTab (Noeud.Gauche);
          end if;
          if Tab = null then
-            Tab := new TTab'(Positive'First => Noeud);  -- premier élément du tableau
+            Tab := new TTab'(TabVide & Noeud);  -- premier élément du tableau
          else
             declare
                AncienTab : PTab := Tab;
@@ -112,6 +113,7 @@ is
          if Noeud.Droit /= null then
             PlaceDansTab (Noeud.Droit);
          end if;
+         Noeud := null;
       end PlaceDansTab;
 
       procedure PlaceDansArbre (Noeud : out PNoeud; Premier, Dernier : Positive) with
