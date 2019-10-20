@@ -141,9 +141,9 @@ is
          Global => (In_Out => Tab)
       is
       begin
-         Noeud := Tab (Tab'First);
+         Échange (Noeud, Tab (Tab'First));
          for Index in Tab'First .. Tab'Last - 1 loop
-            Tab (Index).Suivant := Tab (Index + 1);
+            Échange (Tab (Index).Suivant, Tab (Index + 1));
          end loop;
          Tab (Tab'Last).Suivant := null;
       end PlaceDansListe;
