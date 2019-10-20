@@ -124,6 +124,7 @@ is
          Index : Positive;
       begin
          Index := (Premier + Dernier) / 2;
+         Noeud := null;
          Échange (Noeud, Tab (Index));
          if Premier /= Index then
             PlaceDansArbre (Noeud.Gauche, Premier, Index - 1);
@@ -141,6 +142,7 @@ is
          Global => (In_Out => Tab)
       is
       begin
+         Noeud := null;
          Échange (Noeud, Tab (Tab'First));
          for Index in Tab'First .. Tab'Last - 1 loop
             Échange (Tab (Index).Suivant, Tab (Index + 1));
