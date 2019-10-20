@@ -43,6 +43,14 @@ is
    type TTab is array (Positive range <>) of PNoeud;
    type PTab is access TTab;
 
+   -- Échange de propriétaire
+   procedure Échange (NA, NB : in out PNoeud) is
+      NC : constant PNoeud := NA;
+   begin
+      NA := NB;
+      NB := NC;
+   end Échange;
+
    -- Ajoute un élément à l'arbre binaire en le triant par l'ordre défini par la clef.
    procedure Ajoute (Clef : TClef; Element : TElement) is
       NoeudNouveau : PNoeud;
@@ -116,7 +124,7 @@ is
          Index : Positive;
       begin
          Index := (Premier + Dernier) / 2;
-         Noeud := Tab (Index);
+         Échange (Noeud, Tab (Index));
          if Premier /= Index then
             PlaceDansArbre (Noeud.Gauche, Premier, Index - 1);
          else
