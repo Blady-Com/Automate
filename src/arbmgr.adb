@@ -157,6 +157,8 @@ is
          PlaceDansListe (Liste);
          Free (Tab);
          AJour := True;
+      else
+         Liste := null;
       end if;
    end Balance;
 
