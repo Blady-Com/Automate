@@ -1,5 +1,4 @@
-obj/
+/obj/
+/bin/
 .DS_Store
 *.npp
-*.ali
-*.o
