@@ -1,6 +1,6 @@
 Générateur Ada d'automates à états finis.
 
-1) les sources :
+1) Les sources
 
 . programme de génération d'automates (src) :
 arbmgr.adb
@@ -26,7 +26,7 @@ robseq.ads
 robseq.auto
 robseq.in
 
-2) description :
+2) Description
 
   a) plateforme :
 Les programmes ont été compilés et testés avec GNAT GPL 2016 sur macOS 10.11.
@@ -58,7 +58,7 @@ l'extension ".auto".
 Pour cela les fichiers sources des automates ont vu leur extension changée
 de ".txt" en ".auto".
 
-4) Historiques :
+4) Historique
 - 2.2b : corrections mineures (perte de mémoire, suppression attribut class, vérification des null)
 - 2.2a : ajout de la prise en compte des commentaires d'une seule ligne
          commençant par --, les unités externes ne sont plus mises dans l'unité
@@ -69,6 +69,10 @@ de ".txt" en ".auto".
          avec l'utilitaire SubEthaEdit.
 - 2.1a : deuxième version publique an Ada.
 - 1.0a : première version publique en Pascal.
+
+5) Licence
+
+Tous les fichiers sont fournis au titre de la licence CeCILL (https://cecill.info) version 2.1
 
 Pascal Pignard, mai 2001, janvier 2002, juillet 2008, mars 2017.
 

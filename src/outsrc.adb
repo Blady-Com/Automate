@@ -14,7 +14,9 @@
 --
 -- NOTES                            :
 --
---
+-- COPYRIGHT                        : (c) Pascal Pignard 2001
+-- LICENCE                          : CeCILL V2.1 (https://cecill.info)
+-- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
