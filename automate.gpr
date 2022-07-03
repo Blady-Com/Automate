@@ -1,27 +1,32 @@
 project Automate is
 
-   for Object_Dir use "obj/";
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
    for Main use ("genauto.adb");
-   for Source_Dirs use (".", "src");
-
-   package Builder is
-      for Default_Switches ("ada") use ("-s", "-g");
-   end Builder;
+   for Source_Dirs use ("src");
+   for Create_Missing_Dirs use "True";
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnatVa", "-gnatwa", "-g", "-gnato", "-fstack-check", "-gnatE", "-gnatf", "-gnatW8", "-gnateE");
+      for Switches ("ada") use ("-gnatW8", "-gnatU", "-gnatf", "-gnatVaep", "-gnatw.eDH.Y.N",
+         "-fstack-check", "-g", "-gnato", "-gnatE", "-gnata",
+         "-gnateE", "-gnateF", "-gnateV", "-Wall");
+      for Local_Configuration_Pragmas use "pragma_debug.adc";
    end Compiler;
 
-   package Linker is
-      for Default_Switches ("ada") use ("-g", "-Wl,-no_pie");
-   end Linker;
-
    package Binder is
-      for Default_Switches ("ada") use ("-E");
+      for Default_Switches ("ada") use ("-Es");
    end Binder;
 
+   package Builder is
+      for Default_Switches ("ada") use ("-s");
+   end Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-g") & external ("GENAUTO_LINKER_FLAGS", "");
+   end Linker;
+
    package Pretty_Printer is
-      for Default_Switches ("ada") use ("-M99", "-W8");
+      for Default_Switches ("ada") use ("-M120", "-W8", "--comments-unchanged");
    end Pretty_Printer;
 
 end Automate;
