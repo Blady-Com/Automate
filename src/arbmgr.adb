@@ -67,9 +67,7 @@ package body ArbMgr is
 
    begin
       AJour        := False;
-      NoeudNouveau :=
-        new TNoeud'
-          (Gauche => null, Droit => null, Suivant => null, Clef => Clef, Element => Element);
+      NoeudNouveau := new TNoeud'(Gauche => null, Droit => null, Suivant => null, Clef => Clef, Element => Element);
       if Arbre /= null then
          AjouteDans (Arbre);
       else

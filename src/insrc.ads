@@ -36,32 +36,10 @@ package InSrc is
 
    -- Eléments lexicaux
    type TTokenId is
-     (NullId,
-      EotId,
-      NewlineId,
-      ErrorId,
-      UnknownId,
-      CallId,
-      CarId,
-      CommentId,
-      UndefId,
-
-      AutomId,
-      DefaultId,
-      OutId,
-      ErrId,
-      FromId,
-      InitId,
-      EventId,
-      ActionId,
-      VirgId,
-      PlusId,
-      PointpointId,
-      ToId,
-
-      GosubId,
-      EndId,
-      SameId);
+     (NullId, EotId, NewlineId, ErrorId, UnknownId, CallId, CarId, CommentId, UndefId,
+AutomId, DefaultId, OutId, ErrId,
+      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId,
+GosubId, EndId, SameId);
 
    -- Contexte de l'élément lexical
    subtype Ttokenstr is TText;

@@ -117,11 +117,7 @@ begin
       Put_Line (FObject, "package " & To_String (AName) & " is");
       New_Line (FObject);
 
-      Put_Line
-        (FObject,
-         "procedure Start" &
-         To_String (AName) &
-         "(Result : out Boolean; Debug : Boolean := False);");
+      Put_Line (FObject, "procedure Start" & To_String (AName) & "(Result : out Boolean; Debug : Boolean := False);");
       New_Line (FObject);
       Put_Line (FObject, "end " & To_String (AName) & ";");
 
@@ -159,12 +155,8 @@ begin
       New_Line (FObject);
       Put_Line
         (FObject,
-         "procedure Automate (TheState : TState; Event : in out " &
-         To_String (TEventStr) &
-         "; " &
-         To_String (EventDesStr) &
-         " : in out " &
-         To_String (TEventDesStr) &
+         "procedure Automate (TheState : TState; Event : in out " & To_String (TEventStr) & "; " &
+         To_String (EventDesStr) & " : in out " & To_String (TEventDesStr) &
          "; Result : out Boolean; Debug : Boolean := False) is");
       Put_Line (FObject, "  State : TState := TheState;");
       New_Line (FObject);
@@ -178,9 +170,7 @@ begin
       Put_Line (FObject, To_String ("      " & GetEventStr & "(Event, " & EventDesStr & ");"));
       Put_Line (FObject, "    end loop;");
       Put_Line (FObject, "    if Debug then");
-      Put_Line
-        (FObject,
-         "      Put(TState'Image(State) & ""; "" & " & To_String (TEventStr) & "'Image(Event));");
+      Put_Line (FObject, "      Put(TState'Image(State) & ""; "" & " & To_String (TEventStr) & "'Image(Event));");
       Put_Line (FObject, "      if not Result then");
       Put_Line (FObject, "        Put(""+"");");
       Put_Line (FObject, "        Result := True;");
@@ -198,11 +188,7 @@ begin
       Put_Line (FObject, "  Result := State /= stError;");
       Put_Line (FObject, "  end Automate;");
       New_Line (FObject);
-      Put_Line
-        (FObject,
-         "procedure Start" &
-         To_String (AName) &
-         "(Result : out Boolean; Debug : Boolean := False) is");
+      Put_Line (FObject, "procedure Start" & To_String (AName) & "(Result : out Boolean; Debug : Boolean := False) is");
       Put_Line (FObject, "  Event : " & To_String (TEventStr) & ";");
       Put_Line (FObject, "  " & To_String (EventDesStr) & " : " & To_String (TEventDesStr) & ";");
       Put_Line (FObject, "  begin");

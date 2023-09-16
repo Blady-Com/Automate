@@ -35,7 +35,7 @@ package body BasicDef is
    --Renvoie le compteur horaire interne en milisecondes.
    function Horlogems return Natural is
    begin
-      return Natural (Seconds (Clock) * 1000.0);
+      return Natural (Seconds (Clock) * 1_000.0);
    end Horlogems;
 
    procedure Get_Line (Item : out TText) is

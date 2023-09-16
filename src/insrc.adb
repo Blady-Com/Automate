@@ -50,11 +50,7 @@ package body InSrc is
    Chiffrecharset : constant Character_Set := Decimal_Digit_Set;
    Hexacharset    : constant Character_Set := Hexadecimal_Digit_Set;
    Blanccharset   : constant Character_Set :=
-     (To_Set (Asciibel) or
-      To_Set (Asciitab) or
-      To_Set (Asciilf) or
-      To_Set (Asciiff) or
-      To_Set (Asciicr) or
+     (To_Set (Asciibel) or To_Set (Asciitab) or To_Set (Asciilf) or To_Set (Asciiff) or To_Set (Asciicr) or
       To_Set (Asciisp)) and
      not To_Set (Newlinechar);
 
@@ -77,8 +73,7 @@ package body InSrc is
    exception
       when E : others =>
          Raise_Exception
-           (Exception_Identity (E),
-            "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
+           (Exception_Identity (E), "Erreur de lecture du fichier source : """ & SrcFile.Name (F) & """.");
    end FileRead;
 
    -- Procédure de lecture du contenu du fichier source.
@@ -96,9 +91,7 @@ package body InSrc is
       Object.ChTemp := Element (Object.TextBuff, 1);
    exception
       when E : others =>
-         Raise_Exception
-           (Exception_Identity (E),
-            "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
+         Raise_Exception (Exception_Identity (E), "Erreur d'ouverture du fichier source """ & To_String (Name) & """.");
    end Open;
 
    -- Procédure de lecture d'un caractère du buffer contenant le texte source.

@@ -33,9 +33,7 @@ package OutSrc is
    procedure AddNew (Object : not null access TTextListMgr; S : TText);
    procedure AddNew (Object : not null access TTextListMgr; S : String);
    procedure WriteToFile (Object : not null access TTextListMgr; F : File_Type);
-   procedure CopyTo
-     (Object  : not null access TTextListMgr;
-      DstText : not null access TTextListMgr);
+   procedure CopyTo (Object : not null access TTextListMgr; DstText : not null access TTextListMgr);
    procedure Done (Object : not null access TTextListMgr);
 
    -- Objet assurant l'écriture d'énumérés
@@ -82,17 +80,11 @@ package OutSrc is
    -- Référence de l'objet assurant la gestion du nom des unités
    CallUnitList : PEnumListMgr;
 
-   FlLocalDefault, FlDefaultDefault, FlGosub : Boolean;
-   TEventStr,
-   EventDesStr,
-   TEventDesStr,
-   NullEventStr,
-   StateToStr,
-   GetEventStr,
-   UserUnitStr : TText;
-   AName       : TText;
-   NomFich     : TText;
-   LigneFich   : Natural;
+   FlLocalDefault, FlDefaultDefault, FlGosub                                                : Boolean;
+   TEventStr, EventDesStr, TEventDesStr, NullEventStr, StateToStr, GetEventStr, UserUnitStr : TText;
+   AName                                                                                    : TText;
+   NomFich                                                                                  : TText;
+   LigneFich                                                                                : Natural;
 
 private
 
