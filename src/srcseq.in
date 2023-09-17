@@ -3,7 +3,7 @@ Token
 TTokenStr
 NullId
 ReadToken
-InSrc, OutSrc, BasicDef
+UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef
 srcseq.auto
 srcseq.ads
 srcseq.adb

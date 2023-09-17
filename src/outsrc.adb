@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : OutSrc.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 8 mai 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : Octobre 2023
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
 --
@@ -14,22 +14,23 @@
 --
 -- NOTES                            :
 --
--- COPYRIGHT                        : (c) Pascal Pignard 2001
+-- COPYRIGHT                        : (c) Pascal Pignard 2023
 -- LICENCE                          : CeCILL V2.1 (https://cecill.info)
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+
 package body OutSrc is
 
    -- Ajout d'une chaîne sans changer de ligne.
-   procedure Add (Object : not null access TTextListMgr; S : TText) is
+   procedure Add (Object : not null access TTextListMgr; S : UXString) is
    begin
       Object.CurStr := Object.CurStr & S;
    end Add;
 
    -- Ajout d'une chaîne avec changement de ligne.
-   procedure AddNew (Object : not null access TTextListMgr; S : TText) is
+   procedure AddNew (Object : not null access TTextListMgr; S : UXString) is
    begin
       if Object.FirstElt = null then
          Object.FirstElt := new TTextList;
@@ -41,19 +42,7 @@ package body OutSrc is
       Object.CurStr      := Object.CurStr & S;
       Object.CurElt.Text := Object.CurStr;
       Object.CurElt.Next := null;
-      Object.CurStr      := Null_Unbounded_String;
-   end AddNew;
-
-   -- Ajout d'une chaîne sans changer de ligne.
-   procedure Add (Object : not null access TTextListMgr; S : String) is
-   begin
-      Object.CurStr := Object.CurStr & S;
-   end Add;
-
-   -- Ajout d'une chaîne avec changement de ligne.
-   procedure AddNew (Object : not null access TTextListMgr; S : String) is
-   begin
-      AddNew (Object, To_Unbounded_String (S));
+      Object.CurStr      := Null_UXString;
    end AddNew;
 
    -- Ecriture du texte dans un fichier.
@@ -61,7 +50,7 @@ package body OutSrc is
       P : PTextList := Object.FirstElt;
    begin
       while P /= null loop
-         Put_Line (F, To_String (P.Text));
+         Put_Line (F, P.Text);
          P := P.Next;
       end loop;
    end WriteToFile;
@@ -90,7 +79,7 @@ package body OutSrc is
    begin
       while Dum /= null loop
          if Dum.Text /= "" then
-            Dum.Text := Null_Unbounded_String;
+            Dum.Text := Null_UXString;
          end if;
          Dum2 := Dum;
          Free (Dum2);
@@ -98,11 +87,11 @@ package body OutSrc is
       end loop;
       Object.FirstElt := null;
       Object.CurElt   := null;
-      Object.CurStr   := Null_Unbounded_String;
+      Object.CurStr   := Null_UXString;
    end Done;
 
    -- Ajoute un élément s'il ne l'a pas déjà été
-   procedure AddUniq (Object : not null access TEnumListMgr; S : TText) is
+   procedure AddUniq (Object : not null access TEnumListMgr; S : UXString) is
       P     : PTextList := Object.FirstElt;
       Found : Boolean   := False;
    begin
@@ -124,11 +113,14 @@ package body OutSrc is
    begin
       while P /= null loop
          Cpt := (Cpt + 1) mod 10;
-         Put (F, ", " & To_String (P.Text));
+         Put (F, P.Text);
          if Cpt = 0 then
             New_Line (F);
          end if;
          P := P.Next;
+         if P /= null then
+            Put (F, ", ");
+         end if;
       end loop;
    end TWriteToFile;
 
@@ -137,7 +129,7 @@ package body OutSrc is
       P : PTextList := Object.FirstElt;
    begin
       while P /= null loop
-         Put_Line (F, "      when " & To_String (P.Text) & " => Action" & To_String (P.Text) & ";");
+         Put_Line (F, "      when " & P.Text & " => Action" & P.Text & ";");
          P := P.Next;
       end loop;
    end AWriteToFile;
@@ -146,10 +138,7 @@ package body OutSrc is
    procedure CWriteToFile (Object : not null access TStateListMgr; F : File_Type) is
    begin
       if Object.FirstElt /= null then
-         Put_Line
-           (F,
-            "  Automate(" & To_String (Object.FirstElt.Text) & ", Event, " & To_String (EventDesStr) &
-            ", Result, Debug);");
+         Put_Line (F, "  Automate(" & Object.FirstElt.Text & ", Event, " & EventDesStr & ", Result, Debug);");
       end if;
    end CWriteToFile;
 

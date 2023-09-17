@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : OutSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : Octobre 2023
 -- ROLE DU CSU                      : Unité de gestion du package résultat.
 --
 --
@@ -14,13 +14,13 @@
 --
 -- NOTES                            :
 --
--- COPYRIGHT                        : (c) Pascal Pignard 2001
+-- COPYRIGHT                        : (c) Pascal Pignard 2023
 -- LICENCE                          : CeCILL V2.1 (https://cecill.info)
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
-with BasicDef;    use BasicDef;
+with UXStrings;         use UXStrings;
+with UXStrings.Text_IO; use UXStrings.Text_IO;
 
 package OutSrc is
 
@@ -28,10 +28,8 @@ package OutSrc is
    type TTextListMgr is tagged private;
    type PTextListMgr is access TTextListMgr;
 
-   procedure Add (Object : not null access TTextListMgr; S : TText);
-   procedure Add (Object : not null access TTextListMgr; S : String);
-   procedure AddNew (Object : not null access TTextListMgr; S : TText);
-   procedure AddNew (Object : not null access TTextListMgr; S : String);
+   procedure Add (Object : not null access TTextListMgr; S : UXString);
+   procedure AddNew (Object : not null access TTextListMgr; S : UXString);
    procedure WriteToFile (Object : not null access TTextListMgr; F : File_Type);
    procedure CopyTo (Object : not null access TTextListMgr; DstText : not null access TTextListMgr);
    procedure Done (Object : not null access TTextListMgr);
@@ -41,7 +39,7 @@ package OutSrc is
    type PEnumListMgr is access TEnumListMgr;
 
    -- Ajoute un élément s'il ne l'a pas déjà été
-   procedure AddUniq (Object : not null access TEnumListMgr; S : TText);
+   procedure AddUniq (Object : not null access TEnumListMgr; S : UXString);
    -- Ecrit le type des énumérés dans le fichier F
    procedure TWriteToFile (Object : not null access TEnumListMgr; F : File_Type);
 
@@ -81,9 +79,9 @@ package OutSrc is
    CallUnitList : PEnumListMgr;
 
    FlLocalDefault, FlDefaultDefault, FlGosub                                                : Boolean;
-   TEventStr, EventDesStr, TEventDesStr, NullEventStr, StateToStr, GetEventStr, UserUnitStr : TText;
-   AName                                                                                    : TText;
-   NomFich                                                                                  : TText;
+   TEventStr, EventDesStr, TEventDesStr, NullEventStr, StateToStr, GetEventStr, UserUnitStr : UXString;
+   AName                                                                                    : UXString;
+   NomFich                                                                                  : UXString;
    LigneFich                                                                                : Natural;
 
 private
@@ -93,13 +91,13 @@ private
    -- Ligne de texte du package Ada
    type TTextList is record
       Next : PTextList;
-      Text : TText;
+      Text : UXString;
    end record;
 
    -- Objet assurant l'écriture du package Ada
    type TTextListMgr is tagged record
       FirstElt, CurElt : PTextList := null;
-      CurStr           : TText     := Null_Unbounded_String;
+      CurStr           : UXString;
    end record;
 
    -- Objet assurant l'écriture d'énumérés

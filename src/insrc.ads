@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (spécification)       : InSrc.ads
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 18 février 2001
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : Octobre 2023
 -- ROLE DU CSU                      : Unité de gestion des textes sources.
 --
 --
@@ -14,14 +14,15 @@
 --
 -- NOTES                            :
 --
--- COPYRIGHT                        : (c) Pascal Pignard 2001
+-- COPYRIGHT                        : (c) Pascal Pignard 2023
 -- LICENCE                          : CeCILL V2.1 (https://cecill.info)
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
-with Ada.Direct_IO;
 with ArbMgr;
-with BasicDef; use BasicDef;
+with UXStrings; use UXStrings;
+with UXStrings.Text_IO;
+with UXStrings.Conversions;
 
 package InSrc is
 
@@ -29,43 +30,41 @@ package InSrc is
    type TSourceMgr is tagged limited private;
    type PSourceMgr is access TSourceMgr;
 
-   procedure Open (Object : not null access TSourceMgr; Name : TText);
-   procedure Read (Object : not null access TSourceMgr; Ch1, Ch2 : out Character);
-   procedure Status (Object : not null access TSourceMgr; Name : out TText; Ligne : out Natural);
+   procedure Open (Object : not null access TSourceMgr; Name : UXString);
+   procedure Read (Object : not null access TSourceMgr; Ch1, Ch2 : out Wide_Wide_Character);
+   procedure Status (Object : not null access TSourceMgr; Name : out UXString; Ligne : out Natural);
    procedure Close (Object : not null access TSourceMgr);
 
    -- Eléments lexicaux
    type TTokenId is
-     (NullId, EotId, NewlineId, ErrorId, UnknownId, CallId, CarId, CommentId, UndefId,
-AutomId, DefaultId, OutId, ErrId,
-      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId,
-GosubId, EndId, SameId);
+     (NullId, EotId, NewlineId, ErrorId, UnknownId, CallId, CarId, CommentId, UndefId, AutomId, DefaultId, OutId, ErrId,
+      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId, GosubId, EndId, SameId);
+
+   function Image is new UXStrings.Conversions.Scalar_Image (TTokenId);
 
    -- Contexte de l'élément lexical
-   subtype Ttokenstr is TText;
+   subtype Ttokenstr is UXString;
 
    -- Lit un ou plusieurs caractères dans le texte source et le ou les transforme en éléments lexicaux.
    procedure ReadToken (TokenId : out TTokenId; Token : out Ttokenstr);
 
    -- Référence du package assurant la gestion des mots clés
-   package IdAuto is new ArbMgr (TText, TTokenId, UndefId);
+   package IdAuto is new ArbMgr (UXString, TTokenId, UndefId);
 
    SrcAuto : PSourceMgr;     -- Référence de l'objet assurant la gestion du texte source de l'automate
 
 private
 
-   package SrcFile is new Ada.Direct_IO (Character);
-
-   subtype Ttextbuff is TText;
+   subtype Ttextbuff is UXString;
 
    -- Objet assurant la gestion du fichier source.
    type TSourceMgr is tagged limited record
-      FName            : TText;
-      FRef             : SrcFile.File_Type;
-      FLen             : SrcFile.Count;
+      FName            : UXString;
+      FRef             : UXStrings.Text_IO.File_Type;
+      FLen             : UXStrings.Text_IO.Count;
       CptCar, CptLigne : Natural;
       TextBuff         : Ttextbuff;
-      ChTemp           : Character;
+      ChTemp           : Wide_Wide_Character;
    end record;
 
 end InSrc;

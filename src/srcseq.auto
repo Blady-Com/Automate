@@ -1,8 +1,8 @@
 {-------------------------------------------------------------------------------
 -- NOM DU CSU (automate)            : SrcSeq.auto
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.1a
--- DATE DE LA DERNIERE MISE A JOUR  : 27 juillet 2008
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : Octobre 2023
 -- ROLE DU CSU                      : Automate assurant le décodage syntaxique de
 --                                    son langage de descrition d'automates.
 --
@@ -14,7 +14,7 @@
 --
 -- NOTES                            :
 --
--- COPYRIGHT                        : (c) Pascal Pignard 2008
+-- COPYRIGHT                        : (c) Pascal Pignard 2023
 -- LICENCE                          : CeCILL V2.1 (https://cecill.info)
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 -------------------------------------------------------------------------------}
@@ -28,11 +28,11 @@ default
   event NewLineId to same
     action `    if Debug then`
            `      Status(SrcAuto, NomFich, LigneFich);`
-           `      Put_Line("Fichier " & NomFich & ", ligne " & Integer'Image(LigneFich));`
+           `      Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));`
            `    end if;`
   event default to error
     action `    Status(SrcAuto, NomFich, LigneFich);`
-           `    Put_Line("Erreur de syntaxe à la ligne " & Integer'Image(LigneFich) & " , " & TTokenId'Image(Event) & " , " & Token);`
+           `    Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);`
 
 
 { Définition de l'automate}
@@ -146,11 +146,11 @@ from EV5
   event UndefId to EV6
     action `    StateToStr := Token;`
   event OutId to EV6
-    action `    StateToStr := To_Unbounded_String("stQuit");`
+    action `    StateToStr := "stQuit";`
   event ErrId to EV6
-    action `    StateToStr := To_Unbounded_String("stError");`
+    action `    StateToStr := "stError";`
   event SameId to EV6
-    action `    StateToStr := Null_Unbounded_String;`
+    action `    StateToStr := Null_UXString;`
 
 { Définition des actions, d'un autre événement, d'un autre état ou de la fin de l'automate }
 from EV6

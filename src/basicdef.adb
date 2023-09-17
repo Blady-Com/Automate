@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 -- NOM DU CSU (corps)               : BasicDef.adb
 -- AUTEUR DU CSU                    : P. Pignard
--- VERSION DU CSU                   : 2.2b
--- DATE DE LA DERNIERE MISE A JOUR  : 18 juillet 2008
+-- VERSION DU CSU                   : 3.0a
+-- DATE DE LA DERNIERE MISE A JOUR  : Octobre 2023
 -- ROLE DU CSU                      : Unité de définition de types et procédures.
 --
 --
@@ -14,22 +14,21 @@
 --
 -- NOTES                            :
 --
--- COPYRIGHT                        : (c) Pascal Pignard 2008
+-- COPYRIGHT                        : (c) Pascal Pignard 2023
 -- LICENCE                          : CeCILL V2.1 (https://cecill.info)
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
-with Ada.Calendar;             use Ada.Calendar;
-with Ada.Text_IO;              use Ada.Text_IO;
-with Ada.Directories;          use Ada.Directories;
-with Ada.Text_IO.Unbounded_IO; use Ada.Text_IO.Unbounded_IO;
+with Ada.Calendar;    use Ada.Calendar;
+with Ada.Directories; use Ada.Directories;
+with Ada.Strings;
 
 package body BasicDef is
 
    -- Fonction qui, à partir du chemin complet d'un fichier, retourne le nom du fichier seul.
-   function FSplitName (WithPath : TText) return TText is
+   function FSplitName (WithPath : UXString) return UXString is
    begin
-      return To_Unbounded_String (Simple_Name (To_String (WithPath)));
+      return From_UTF_8 (Simple_Name (To_UTF_8 (WithPath)));
    end FSplitName;
 
    --Renvoie le compteur horaire interne en milisecondes.
@@ -38,18 +37,8 @@ package body BasicDef is
       return Natural (Seconds (Clock) * 1_000.0);
    end Horlogems;
 
-   procedure Get_Line (Item : out TText) is
-   begin
-      Get_Line (Ada.Strings.Unbounded.Unbounded_String (Item));
-   end Get_Line;
-
-   procedure Put_Line (Item : TText) is
-   begin
-      Put_Line (Ada.Strings.Unbounded.Unbounded_String (Item));
-   end Put_Line;
-
    -- Fonction retournant une chaîne sans le dernier élément séparé par un point
-   function TruncLast (S : TText) return TText is
+   function TruncLast (S : UXString) return UXString is
    begin
       return Head (S, Index (S, ".", Ada.Strings.Backward) - 1);
    end TruncLast;
