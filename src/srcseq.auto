@@ -64,12 +64,13 @@ from DA5
 { Définition de l'état courant }
 from ET1
   event UndefId to ET2
-    action `    AddNew(StateList, Token);`
+    action `    AddUniq(StateList, Token);`
            `    AddNew(ObjectList, "procedure Action" & Token & " is");`
            `    AddNew(ObjectList, "  DumEvent : " & TEventStr & ";");`
            `    AddNew(ObjectList, "");`
            `    AddNew(ObjectList, "  begin");`
            `    AddNew(ObjectList, "  DumEvent := " & NullEventStr & ";");`
+           `    AddNew(ObjectList, "");`
            `    CopyTo(DefaultInitList, ObjectList);`
 
 { Définition de l'initialisation ou des événements }

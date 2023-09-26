@@ -19,10 +19,10 @@
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 --------------------------------------------------------------------------------
 
-with ArbMgr;
 with UXStrings; use UXStrings;
 with UXStrings.Text_IO;
 with UXStrings.Conversions;
+with Ada.Containers.Ordered_Maps;
 
 package InSrc is
 
@@ -49,7 +49,8 @@ package InSrc is
    procedure ReadToken (TokenId : out TTokenId; Token : out Ttokenstr);
 
    -- Référence du package assurant la gestion des mots clés
-   package IdAuto is new ArbMgr (UXString, TTokenId, UndefId);
+   package IdAutoUnit is new Ada.Containers.Ordered_Maps (UXString, TTokenId);
+   IdAuto : IdAutoUnit.Map;
 
    SrcAuto : PSourceMgr;     -- Référence de l'objet assurant la gestion du texte source de l'automate
 

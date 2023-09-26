@@ -21,11 +21,12 @@
 
 with UXStrings;         use UXStrings;
 with UXStrings.Text_IO; use UXStrings.Text_IO;
+with UXStrings.Lists;   use UXStrings.Lists;
 
 package OutSrc is
 
    -- Objet assurant l'écriture du package Ada
-   type TTextListMgr is tagged private;
+   type TTextListMgr is new UXString_List with private;
    type PTextListMgr is access TTextListMgr;
 
    procedure Add (Object : not null access TTextListMgr; S : UXString);
@@ -86,19 +87,8 @@ package OutSrc is
 
 private
 
-   type TTextList;
-   type PTextList is access TTextList;
-   -- Ligne de texte du package Ada
-   type TTextList is record
-      Next : PTextList;
-      Text : UXString;
-   end record;
-
    -- Objet assurant l'écriture du package Ada
-   type TTextListMgr is tagged record
-      FirstElt, CurElt : PTextList := null;
-      CurStr           : UXString;
-   end record;
+   type TTextListMgr is new UXString_List with null record;
 
    -- Objet assurant l'écriture d'énumérés
    type TEnumListMgr is new TTextListMgr with null record;

@@ -3,9 +3,7 @@ use  UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef;
 
 package body SrcSeq is
 
-  type TState is (stError, stQuit, DA1, DA2, DA3, DA5, ET1, ET2, ET3, ET4, EV1, EV2
-, EV3, EV4, EV5, EV6, A1, A2, A3, A4, D1, D2
-, D3, D4, D5, Fin);
+  type TState is (stError, stQuit, DA1,DA2,DA3,DA5,ET1,ET2,ET3,ET4,EV1,EV2,EV3,EV4,EV5,EV6,A1,A2,A3,A4,D1,D2,D3,D4,D5,Fin);
 
 procedure Automate (StartState : TState; Event : in out TTokenId; Token : in out TTokenStr; Result : out Boolean; Debug : Boolean := False) is
   State : TState := StartState;
@@ -158,12 +156,13 @@ procedure ActionET1 is
       end if;
       null;
     when UndefId =>
-      AddNew(StateList, Token);
+      AddUniq(StateList, Token);
       AddNew(ObjectList, "procedure Action" & Token & " is");
       AddNew(ObjectList, "  DumEvent : " & TEventStr & ";");
       AddNew(ObjectList, "");
       AddNew(ObjectList, "  begin");
       AddNew(ObjectList, "  DumEvent := " & NullEventStr & ";");
+      AddNew(ObjectList, "");
       CopyTo(DefaultInitList, ObjectList);
       State := ET2;
     when others =>
@@ -831,6 +830,7 @@ procedure ActionFin is
     end case;
   Event := DumEvent;
   end;
+
 
 
   begin

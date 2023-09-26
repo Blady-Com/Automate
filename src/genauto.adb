@@ -31,11 +31,6 @@ procedure Genauto is
 
    Debug : constant Boolean := True;
 
-   procedure Ajoute (S : UXString; T : TTokenId) is
-   begin
-      IdAuto.Ajoute (S, T);
-   end Ajoute;
-
    FName, UName : UXString;
    FObject      : File_Type;
    Ok           : Boolean;
@@ -80,19 +75,19 @@ begin
    CallUnitList := new TEnumListMgr;
 
    -- Génération du 'langage' de l'automate.
-   Ajoute ("action", ActionId);
-   Ajoute ("automate", AutomId);
-   Ajoute ("call", CallId);
-   Ajoute ("default", DefaultId);
-   Ajoute ("end", EndId);
-   Ajoute ("error", ErrId);
-   Ajoute ("event", EventId);
-   Ajoute ("from", FromId);
-   Ajoute ("gosub", GosubId);
-   Ajoute ("init", InitId);
-   Ajoute ("out", OutId);
-   Ajoute ("same", SameId);
-   Ajoute ("to", ToId);
+   IdAuto.Insert ("action", ActionId);
+   IdAuto.Insert ("automate", AutomId);
+   IdAuto.Insert ("call", CallId);
+   IdAuto.Insert ("default", DefaultId);
+   IdAuto.Insert ("end", EndId);
+   IdAuto.Insert ("error", ErrId);
+   IdAuto.Insert ("event", EventId);
+   IdAuto.Insert ("from", FromId);
+   IdAuto.Insert ("gosub", GosubId);
+   IdAuto.Insert ("init", InitId);
+   IdAuto.Insert ("out", OutId);
+   IdAuto.Insert ("same", SameId);
+   IdAuto.Insert ("to", ToId);
 
    Put ("Nom du fichier source : ");
    Get_Line (FName);
@@ -105,7 +100,7 @@ begin
    StartSrcSeq (Ok, Debug);
    Close (SrcAuto);
 
-   IdAuto.Detruit;
+   IdAuto.Clear;
 
    Put_Line ("Temps passé : " & Image (Horlogems - Time) & " milisecondes.");
 
@@ -143,16 +138,21 @@ begin
       if UserUnitStr /= Null_UXString then
          Put_Line (FObject, "with " & UserUnitStr & ';');
       end if;
-      Put (FObject, "with ");
-      TWriteToFile (CallUnitList, FObject); -- Todo: test if non empty
-      Put_Line (FObject, ";");
+      if not CallUnitList.Is_Empty then
+         Put (FObject, "with ");
+         TWriteToFile (CallUnitList, FObject);
+         Put_Line (FObject, ";");
+      end if;
 
       if UserUnitStr /= Null_UXString then
          Put_Line (FObject, "use  " & UserUnitStr & ';');
       end if;
-      Put (FObject, "use  ");
-      TWriteToFile (CallUnitList, FObject); -- Todo: test if non empty
-      Put_Line (FObject, ";");
+      if not CallUnitList.Is_Empty then
+         Put (FObject, "use  ");
+         TWriteToFile (CallUnitList, FObject);
+         Put_Line (FObject, ";");
+      end if;
+
       New_Line (FObject);
 
       Put_Line (FObject, "package body " & AName & " is");

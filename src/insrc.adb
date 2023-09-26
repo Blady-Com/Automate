@@ -239,13 +239,20 @@ package body InSrc is
 
       -- Lit un identificateur.
       procedure ReadIdent is
+         Found : IdAutoUnit.Cursor;
+         use type IdAutoUnit.Cursor;
       begin
          Token := Token & Ch;
          while Is_In (ChSuivant, Identcharset) loop
             Read (SrcAuto, Ch, ChSuivant);
             Token := Token & Ch;
          end loop;
-         IdAuto.Recherche (LowStr (Token), TokenId);
+         Found := IdAuto.Find (Token.To_Lower);
+         if Found /= IdAutoUnit.No_Element then
+            TokenId := IdAutoUnit.Element (Found);
+         else
+            TokenId := UndefId;
+         end if;
       end ReadIdent;
 
    begin
