@@ -52,9 +52,6 @@ package body OutSrc is
       for L of Object.all loop
          DstText.AddNew (L);
       end loop;
-      if DstText.Last_Element = Null_UXString then
-         DstText.Delete_Last;
-      end if;
    end CopyTo;
 
    -- Procédure de destruction du texte.

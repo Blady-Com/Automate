@@ -123,12 +123,6 @@ package body InSrc is
       Object.TextBuff := From_Unicode (Asciieot);
    end Close;
 
-   -- Renvoie la chaîne en minuscule.
-   function LowStr (S : UXString) return UXString is
-   begin
-      return To_Lower (S);
-   end LowStr;
-
    -- Affiche la raison de l'erreur.
    procedure AffGenericErr (Id : TGenericErr) is
       function Image is new UXStrings.Conversions.Scalar_Image (TGenericErr);
@@ -172,7 +166,7 @@ package body InSrc is
             when Asciietx =>
                TokenId := CarId;
             when others =>
-               AffChaineErr ("" & Ch); -- !!!!
+               AffChaineErr (From_Unicode (Ch));
                TokenId := ErrorId;
          end case;
       end ReadChaine;

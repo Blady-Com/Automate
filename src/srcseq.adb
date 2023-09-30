@@ -10,10 +10,9 @@ procedure Automate (StartState : TState; Event : in out TTokenId; Token : in out
 
 procedure ActionDA1 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
-  flLocalDefault := False; flDefaultDefault := False; flGosub:=False;
+  flLocalDefault := False; flDefaultDefault := False; flGosub:=False; flAction:=False;
   case Event is
     when CommentId =>
       null;
@@ -22,7 +21,6 @@ procedure ActionDA1 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when AutomId =>
       State := DA2;
     when others =>
@@ -33,10 +31,8 @@ procedure ActionDA1 is
   Event := DumEvent;
   end;
 
-
 procedure ActionDA2 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -47,7 +43,6 @@ procedure ActionDA2 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       AName := Token;
       State := DA3;
@@ -59,10 +54,8 @@ procedure ActionDA2 is
   Event := DumEvent;
   end;
 
-
 procedure ActionDA3 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -73,7 +66,6 @@ procedure ActionDA3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when FromId =>
       declare
         LResult : Boolean;
@@ -104,10 +96,8 @@ procedure ActionDA3 is
   Event := DumEvent;
   end;
 
-
 procedure ActionDA5 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -118,7 +108,6 @@ procedure ActionDA5 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when FromId =>
       declare
         LResult : Boolean;
@@ -140,10 +129,8 @@ procedure ActionDA5 is
   Event := DumEvent;
   end;
 
-
 procedure ActionET1 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -154,15 +141,15 @@ procedure ActionET1 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       AddUniq(StateList, Token);
       AddNew(ObjectList, "procedure Action" & Token & " is");
       AddNew(ObjectList, "  DumEvent : " & TEventStr & ";");
-      AddNew(ObjectList, "");
       AddNew(ObjectList, "  begin");
       AddNew(ObjectList, "  DumEvent := " & NullEventStr & ";");
-      AddNew(ObjectList, "");
+      if not DefaultInitList.Is_Empty and then DefaultInitList.Last_Element = Null_UXString then
+        DefaultInitList.Delete_Last;
+      end if;
       CopyTo(DefaultInitList, ObjectList);
       State := ET2;
     when others =>
@@ -173,10 +160,8 @@ procedure ActionET1 is
   Event := DumEvent;
   end;
 
-
 procedure ActionET2 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -187,12 +172,14 @@ procedure ActionET2 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when InitId =>
       State := ET3;
     when EventId =>
       DumEvent := Event;
-      AddNew(ObjectList,  "  case Event is");
+      AddNew(ObjectList, "  case Event is");
+      if not DefaultEventList.Is_Empty and then DefaultEventList.Last_Element = Null_UXString then
+        DefaultEventList.Delete_Last;
+      end if;
       CopyTo(DefaultEventList, ObjectList);
       State := ET4;
     when others =>
@@ -203,10 +190,8 @@ procedure ActionET2 is
   Event := DumEvent;
   end;
 
-
 procedure ActionET3 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -217,7 +202,6 @@ procedure ActionET3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when CallId | GosubId | ActionId | CarId =>
       DumEvent := Event;
       DefaultOutputList := ObjectList;
@@ -233,7 +217,10 @@ procedure ActionET3 is
         end;
     when EventId =>
       DumEvent := Event;
-      AddNew(ObjectList,  "  case Event is");
+      AddNew(ObjectList, "  case Event is");
+      if not DefaultEventList.Is_Empty and then DefaultEventList.Last_Element = Null_UXString then
+        DefaultEventList.Delete_Last;
+      end if;
       CopyTo(DefaultEventList, ObjectList);
       State := ET4;
     when others =>
@@ -244,10 +231,8 @@ procedure ActionET3 is
   Event := DumEvent;
   end;
 
-
 procedure ActionET4 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -258,7 +243,6 @@ procedure ActionET4 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when EventId =>
       DefaultOutputList := ObjectList;
       declare
@@ -274,18 +258,20 @@ procedure ActionET4 is
     when FromId | EndId =>
       DumEvent := Event;
       if flDefaultDefault and then not flLocaldefault then
+        if not DefaultDefaultList.Is_Empty and then DefaultDefaultList.Last_Element = Null_UXString then
+          DefaultDefaultList.Delete_Last;
+        end if;
         CopyTo(DefaultDefaultList, ObjectList);
       end if;
       if not flLocaldefault and then not flDefaultDefault then
-        AddNew(ObjectList,  "    when others =>");
-        AddNew(ObjectList,  "      null;");
+        AddNew(ObjectList, "    when others =>");
+        AddNew(ObjectList, "      null;");
       end if;
       flLocalDefault := False;
-      AddNew(ObjectList,  "    end case;");
-      AddNew(ObjectList,  "  Event := DumEvent;");
-      AddNew(ObjectList,  "  end;");
-      AddNew(ObjectList, "");
-      AddNew(ObjectList, "");
+      AddNew(ObjectList, "    end case;");
+      AddNew(ObjectList, "  Event := DumEvent;");
+      AddNew(ObjectList, "  end;");
+      AddNew(ObjectList, Null_UXString);
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
@@ -295,10 +281,8 @@ procedure ActionET4 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV1 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -309,14 +293,13 @@ procedure ActionEV1 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       Add(DefaultOutputList, "    when " & Token);
       AddUniq(EventList, Token);
       State := EV2;
     when DefaultId =>
       flLocalDefault := True;
-      Add(DefaultOutputList,  "    when others");
+      Add(DefaultOutputList, "    when others");
       State := EV2;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
@@ -326,10 +309,8 @@ procedure ActionEV1 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV2 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -340,7 +321,6 @@ procedure ActionEV2 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when VirgId =>
       Add(DefaultOutputList, " | ");
       State := EV3;
@@ -348,11 +328,11 @@ procedure ActionEV2 is
       Add(DefaultOutputList, " .. ");
       State := EV3;
     when PlusId =>
-      AddNew(DefaultOutputList,  " =>");
-      AddNew(DefaultOutputList,  "      DumEvent := Event;");
+      AddNew(DefaultOutputList, " =>");
+      AddNew(DefaultOutputList, "      DumEvent := Event;");
       State := EV4;
     when ToId =>
-      AddNew(DefaultOutputList,  " =>");
+      AddNew(DefaultOutputList, " =>");
       State := EV5;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
@@ -362,10 +342,8 @@ procedure ActionEV2 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV3 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -376,7 +354,6 @@ procedure ActionEV3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       Add(DefaultOutputList, Token);
       AddUniq(EventList, Token);
@@ -389,10 +366,8 @@ procedure ActionEV3 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV4 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -403,7 +378,6 @@ procedure ActionEV4 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when ToId =>
       State := EV5;
     when others =>
@@ -414,10 +388,8 @@ procedure ActionEV4 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV5 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -428,7 +400,6 @@ procedure ActionEV5 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       StateToStr := Token;
       State := EV6;
@@ -449,10 +420,8 @@ procedure ActionEV5 is
   Event := DumEvent;
   end;
 
-
 procedure ActionEV6 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -463,14 +432,16 @@ procedure ActionEV6 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when EventId | EndId | FromId =>
       DumEvent := Event;
-      if StateToStr /= "" then
+      if StateToStr /= Null_UXString then
         AddNew(DefaultOutputList, "      State := " & StateToStr & ";");
       else
-        AddNew(DefaultOutputList, "      null;");
+        if not flAction or flGosub then
+          AddNew(DefaultOutputList, "      null;");
+        end if;
       end if;
+      flAction := False;
       if flGosub then
         AddNew(DefaultOutputList, "            else");
         AddNew(DefaultOutputList, "          State := stError;");
@@ -481,6 +452,7 @@ procedure ActionEV6 is
       State := stQuit;
     when CallId | GosubId | ActionId | CarId =>
       DumEvent := Event;
+      flAction := True;
       declare
         LResult : Boolean;
       begin
@@ -499,10 +471,8 @@ procedure ActionEV6 is
   Event := DumEvent;
   end;
 
-
 procedure ActionA1 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -513,7 +483,6 @@ procedure ActionA1 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when CallId =>
       State := A2;
     when GosubId =>
@@ -531,10 +500,8 @@ procedure ActionA1 is
   Event := DumEvent;
   end;
 
-
 procedure ActionA2 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -545,7 +512,6 @@ procedure ActionA2 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       AddNew(DefaultOutputList, "      declare");
       AddNew(DefaultOutputList, "        LResult : Boolean;");
@@ -563,10 +529,8 @@ procedure ActionA2 is
   Event := DumEvent;
   end;
 
-
 procedure ActionA3 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -577,7 +541,6 @@ procedure ActionA3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       AddNew(DefaultOutputList, "      declare");
       AddNew(DefaultOutputList, "        LResult : Boolean;");
@@ -595,10 +558,8 @@ procedure ActionA3 is
   Event := DumEvent;
   end;
 
-
 procedure ActionA4 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -609,7 +570,6 @@ procedure ActionA4 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when CarId =>
       AddNew(DefaultOutputList, "  " & Token);
       State := stQuit;
@@ -621,10 +581,8 @@ procedure ActionA4 is
   Event := DumEvent;
   end;
 
-
 procedure ActionD1 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -635,7 +593,6 @@ procedure ActionD1 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when InitId =>
       State := D2;
     when EventId =>
@@ -649,10 +606,8 @@ procedure ActionD1 is
   Event := DumEvent;
   end;
 
-
 procedure ActionD2 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -663,7 +618,6 @@ procedure ActionD2 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when CallId | GosubId | ActionId | CarId =>
       DumEvent := Event;
       DefaultOutputList := DefaultInitList;
@@ -685,10 +639,8 @@ procedure ActionD2 is
   Event := DumEvent;
   end;
 
-
 procedure ActionD3 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -699,7 +651,6 @@ procedure ActionD3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when FromId =>
       DumEvent := Event;
       State := stQuit;
@@ -727,10 +678,8 @@ procedure ActionD3 is
   Event := DumEvent;
   end;
 
-
 procedure ActionD4 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -741,7 +690,6 @@ procedure ActionD4 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when EventId =>
       State := D5;
     when FromId =>
@@ -755,10 +703,8 @@ procedure ActionD4 is
   Event := DumEvent;
   end;
 
-
 procedure ActionD5 is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -769,7 +715,6 @@ procedure ActionD5 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when UndefId =>
       DefaultOutputList := DefaultEventList;
       Add(DefaultOutputList, "    when " & Token);
@@ -806,10 +751,8 @@ procedure ActionD5 is
   Event := DumEvent;
   end;
 
-
 procedure ActionFin is
   DumEvent : TTokenId;
-
   begin
   DumEvent := NullId;
   case Event is
@@ -820,7 +763,6 @@ procedure ActionFin is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-      null;
     when EotId =>
       State := stQuit;
     when others =>
@@ -830,7 +772,6 @@ procedure ActionFin is
     end case;
   Event := DumEvent;
   end;
-
 
 
   begin
@@ -872,7 +813,7 @@ procedure ActionFin is
       when D4 => ActionD4;
       when D5 => ActionD5;
       when Fin => ActionFin;
-      when others =>
+      when stError | stQuit =>
         null;
       end case;
     end loop;

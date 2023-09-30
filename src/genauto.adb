@@ -111,7 +111,7 @@ begin
       -- Création de la spécification du package
       Put ("Nom de l'unité Ada (spec : " & UName & ".ads) : ");
       Get_Line (FName);
-      if FName = "" then
+      if FName = Null_UXString then
          FName := UName & ".ads";
       end if;
 
@@ -129,7 +129,7 @@ begin
       -- Création du corps du package
       Put ("Nom de l'unité Ada (corps : " & UName & ".adb) : ");
       Get_Line (FName);
-      if FName = "" then
+      if FName = Null_UXString then
          FName := UName & ".adb";
       end if;
 
@@ -190,7 +190,7 @@ begin
 
       AWriteToFile (StateList, FObject);
 
-      Put_Line (FObject, "      when others =>");
+      Put_Line (FObject, "      when stError | stQuit =>");
       Put_Line (FObject, "        null;");
       Put_Line (FObject, "      end case;");
       Put_Line (FObject, "    end loop;");

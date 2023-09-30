@@ -79,7 +79,7 @@ package OutSrc is
    -- Référence de l'objet assurant la gestion du nom des unités
    CallUnitList : PEnumListMgr;
 
-   FlLocalDefault, FlDefaultDefault, FlGosub                                                : Boolean;
+   FlLocalDefault, FlDefaultDefault, FlGosub, FlAction                                      : Boolean;
    TEventStr, EventDesStr, TEventDesStr, NullEventStr, StateToStr, GetEventStr, UserUnitStr : UXString;
    AName                                                                                    : UXString;
    NomFich                                                                                  : UXString;

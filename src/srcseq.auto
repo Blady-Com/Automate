@@ -38,7 +38,7 @@ default
 { Définition de l'automate}
 { Etat de départ de l'automate }
 from DA1
-  init action `flLocalDefault := False; flDefaultDefault := False; flGosub:=False;`
+  init action `flLocalDefault := False; flDefaultDefault := False; flGosub:=False; flAction:=False;`
   event AutomId to DA2
 
 { Nom de l'automate }
@@ -67,17 +67,21 @@ from ET1
     action `    AddUniq(StateList, Token);`
            `    AddNew(ObjectList, "procedure Action" & Token & " is");`
            `    AddNew(ObjectList, "  DumEvent : " & TEventStr & ";");`
-           `    AddNew(ObjectList, "");`
            `    AddNew(ObjectList, "  begin");`
            `    AddNew(ObjectList, "  DumEvent := " & NullEventStr & ";");`
-           `    AddNew(ObjectList, "");`
+           `    if not DefaultInitList.Is_Empty and then DefaultInitList.Last_Element = Null_UXString then`
+           `      DefaultInitList.Delete_Last;`
+           `    end if;`
            `    CopyTo(DefaultInitList, ObjectList);`
 
 { Définition de l'initialisation ou des événements }
 from ET2
   event InitId to ET3
   event EventId + to ET4
-    action `    AddNew(ObjectList,  "  case Event is");`
+    action `    AddNew(ObjectList, "  case Event is");`
+           `    if not DefaultEventList.Is_Empty and then DefaultEventList.Last_Element = Null_UXString then`
+           `      DefaultEventList.Delete_Last;`
+           `    end if;`
            `    CopyTo(DefaultEventList, ObjectList);`
 
 { Définition d'une autre action ou d'un événement }
@@ -86,7 +90,10 @@ from ET3
     action `    DefaultOutputList := ObjectList;`
     gosub A1
   event EventId + to ET4
-    action `    AddNew(ObjectList,  "  case Event is");`
+    action `    AddNew(ObjectList, "  case Event is");`
+           `    if not DefaultEventList.Is_Empty and then DefaultEventList.Last_Element = Null_UXString then`
+           `      DefaultEventList.Delete_Last;`
+           `    end if;`
            `    CopyTo(DefaultEventList, ObjectList);`
 
 { Définition d'un autre événement, d'un autre état ou de la fin de l'automate }
@@ -96,18 +103,20 @@ from ET4
     gosub EV1
   event FromId, EndId + to out
     action `    if flDefaultDefault and then not flLocaldefault then`
+           `      if not DefaultDefaultList.Is_Empty and then DefaultDefaultList.Last_Element = Null_UXString then`
+           `        DefaultDefaultList.Delete_Last;`
+           `      end if;`
            `      CopyTo(DefaultDefaultList, ObjectList);`
            `    end if;`
            `    if not flLocaldefault and then not flDefaultDefault then`
-           `      AddNew(ObjectList,  "    when others =>");`
-           `      AddNew(ObjectList,  "      null;");`
+           `      AddNew(ObjectList, "    when others =>");`
+           `      AddNew(ObjectList, "      null;");`
            `    end if;`
            `    flLocalDefault := False;`
-           `    AddNew(ObjectList,  "    end case;");`
-           `    AddNew(ObjectList,  "  Event := DumEvent;");`
-           `    AddNew(ObjectList,  "  end;");`
-           `    AddNew(ObjectList, "");`
-           `    AddNew(ObjectList, "");`
+           `    AddNew(ObjectList, "    end case;");`
+           `    AddNew(ObjectList, "  Event := DumEvent;");`
+           `    AddNew(ObjectList, "  end;");`
+           `    AddNew(ObjectList, Null_UXString);`
 
 
 { Définition d'un événement }
@@ -118,7 +127,7 @@ from EV1
            `    AddUniq(EventList, Token);`
   event DefaultId to EV2
     action `    flLocalDefault := True;`
-           `    Add(DefaultOutputList,  "    when others");`
+           `    Add(DefaultOutputList, "    when others");`
 
 { Définition d'une suite d"événements, du chaînage des événements ou de l'état destination }
 from EV2
@@ -127,10 +136,10 @@ from EV2
   event PointPointId to EV3
     action `    Add(DefaultOutputList, " .. ");`
   event PlusId to EV4
-    action `    AddNew(DefaultOutputList,  " =>");`
-           `    AddNew(DefaultOutputList,  "      DumEvent := Event;");`
+    action `    AddNew(DefaultOutputList, " =>");`
+           `    AddNew(DefaultOutputList, "      DumEvent := Event;");`
   event ToId to EV5
-    action `    AddNew(DefaultOutputList,  " =>");`
+    action `    AddNew(DefaultOutputList, " =>");`
 
 { Nom de l'événement }
 from EV3
@@ -156,11 +165,14 @@ from EV5
 { Définition des actions, d'un autre événement, d'un autre état ou de la fin de l'automate }
 from EV6
   event EventId, EndId, FromId + to out
-    action `    if StateToStr /= "" then`
+    action `    if StateToStr /= Null_UXString then`
            `      AddNew(DefaultOutputList, "      State := " & StateToStr & ";");`
            `    else`
-           `      AddNew(DefaultOutputList, "      null;");`
+           `      if not flAction or flGosub then`
+           `        AddNew(DefaultOutputList, "      null;");`
+           `      end if;`
            `    end if;`
+           `    flAction := False;`
            `    if flGosub then`
            `      AddNew(DefaultOutputList, "            else");`
            `      AddNew(DefaultOutputList, "          State := stError;");`
@@ -169,6 +181,7 @@ from EV6
            `      flGosub := False;`
            `    end if;`
   event CallId, GosubId, ActionId, CarId + to same
+    action `    flAction := True;`
     gosub A1
 
 
