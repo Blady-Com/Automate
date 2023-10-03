@@ -133,7 +133,7 @@ package body InSrc is
    -- Affiche une chaîne à la suite d'une erreur.
    procedure AffChaineErr (Chaine : UXString) is
    begin
-      Put_Line (Chaine);
+      Put_Line ("Erreur : " & Chaine);
    end AffChaineErr;
 
 -- Lit un ou plusieurs caractère dans le texte source et le ou les transforme en éléments lexicaux.
@@ -147,11 +147,7 @@ package body InSrc is
          while Is_In (Ch, Normasciicharset) loop
             if (Ch = '`') and (ChSuivant = '`') then
                Read (SrcAuto, Ch, ChSuivant);
-            end if;
-            if Ch = Asciietx then
-               Ch := Asciinul;
-            end if;
-            if (Ch = '`') and (ChSuivant /= '`') then
+            elsif (Ch = '`') and (ChSuivant /= '`') then
                Ch := Asciietx;
             end if;
             if Ch /= Asciietx then
@@ -162,11 +158,13 @@ package body InSrc is
          case Ch is
             when Asciieot =>
                AffGenericErr (ManqueApos);
+               AffChaineErr ("Fin de fichier non attendue.");
                TokenId := ErrorId;
             when Asciietx =>
                TokenId := CarId;
             when others =>
-               AffChaineErr (From_Unicode (Ch));
+               AffGenericErr (ManqueApos);
+               AffChaineErr ("caractère non attendu : " & From_Unicode (Ch));
                TokenId := ErrorId;
          end case;
       end ReadChaine;
@@ -268,30 +266,37 @@ package body InSrc is
                ReadComment;
             else
                TokenId := ErrorId;
+               Token   := "(" & ChSuivant;
             end if;
          when '-' =>
             if ChSuivant = '-' then
                ReadCommentSingleLine;
             else
                TokenId := ErrorId;
+               Token   := "-" & ChSuivant;
             end if;
          when '+' =>
             TokenId := PlusId;
+            Token   := "+";
          when '.' =>
             if ChSuivant = '.' then
                TokenId := PointpointId;
                Read (SrcAuto, Ch, ChSuivant);
+               Token := "..";
             else
-               TokenId := UnknownId;
+               TokenId := ErrorId;
+               Token   := "." & ChSuivant;
             end if;
          when ',' =>
             TokenId := VirgId;
+            Token   := ",";
          when 'A' .. 'Z' | 'a' .. 'z' | '_' =>
             ReadIdent;
          when '{' =>
             ReadComment;
          when others =>
-            TokenId := UnknownId;
+            TokenId := ErrorId;
+            Token   := From_Unicode (Ch);
       end case;
    end ReadToken;
 

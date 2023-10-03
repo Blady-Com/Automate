@@ -25,7 +25,7 @@ procedure ActionDA1 is
       State := DA2;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -48,7 +48,7 @@ procedure ActionDA2 is
       State := DA3;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -90,7 +90,7 @@ procedure ActionDA3 is
         end;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -123,7 +123,7 @@ procedure ActionDA5 is
       State := fin;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -154,7 +154,7 @@ procedure ActionET1 is
       State := ET2;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -184,7 +184,7 @@ procedure ActionET2 is
       State := ET4;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -225,7 +225,7 @@ procedure ActionET3 is
       State := ET4;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -275,7 +275,7 @@ procedure ActionET4 is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -303,7 +303,7 @@ procedure ActionEV1 is
       State := EV2;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -330,13 +330,14 @@ procedure ActionEV2 is
     when PlusId =>
       AddNew(DefaultOutputList, " =>");
       AddNew(DefaultOutputList, "      DumEvent := Event;");
+      flAction := True;
       State := EV4;
     when ToId =>
       AddNew(DefaultOutputList, " =>");
       State := EV5;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -360,7 +361,7 @@ procedure ActionEV3 is
       State := EV2;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -382,7 +383,7 @@ procedure ActionEV4 is
       State := EV5;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -414,7 +415,7 @@ procedure ActionEV5 is
       State := EV6;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -465,7 +466,7 @@ procedure ActionEV6 is
         end;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -494,7 +495,7 @@ procedure ActionA1 is
       State := A4;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -523,7 +524,7 @@ procedure ActionA2 is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -552,7 +553,7 @@ procedure ActionA3 is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -575,7 +576,7 @@ procedure ActionA4 is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -600,7 +601,7 @@ procedure ActionD1 is
       State := D4;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -633,7 +634,7 @@ procedure ActionD2 is
         end;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -672,7 +673,7 @@ procedure ActionD3 is
       State := D4;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -697,7 +698,7 @@ procedure ActionD4 is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -745,7 +746,7 @@ procedure ActionD5 is
         end;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -767,7 +768,7 @@ procedure ActionFin is
       State := stQuit;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
-      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
       State := stError;
     end case;
   Event := DumEvent;
@@ -775,18 +776,17 @@ procedure ActionFin is
 
 
   begin
-  Result := Event = NullId;
   while (State /= stError) and (State /= stQuit) loop
+    Result := Event = NullId;
     while Event = NullId loop
       ReadToken(Event, Token);
     end loop;
     if Debug then
-      Put(From_UTF_8 (TState'Image(State)) & "; " & Image(Event));
+      Put(From_UTF_8 (TState'Image(State)) & "; ");
       if not Result then
-        Put("+");
-        Result := True;
+        Put("+ ");
       end if;
-      Put_Line("; " & Token);
+      Put_Line(Image(Event) & "; " & Token);
     end if;
     case State is
       when DA1 => ActionDA1;
@@ -821,10 +821,9 @@ procedure ActionFin is
   end Automate;
 
 procedure StartSrcSeq(Result : out Boolean; Debug : Boolean := False) is
-  Event : TTokenId;
+  Event : TTokenId := NullId;
   Token : TTokenStr;
   begin
-  ReadToken(Event, Token);
   Automate(DA1, Event, Token, Result, Debug);
   end StartSrcSeq;
 

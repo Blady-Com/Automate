@@ -32,7 +32,7 @@ default
            `    end if;`
   event default to error
     action `    Status(SrcAuto, NomFich, LigneFich);`
-           `    Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & " , " & Image(Event) & " , " & Token);`
+           `    Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);`
 
 
 { Définition de l'automate}
@@ -138,6 +138,7 @@ from EV2
   event PlusId to EV4
     action `    AddNew(DefaultOutputList, " =>");`
            `    AddNew(DefaultOutputList, "      DumEvent := Event;");`
+           `    flAction := True;`
   event ToId to EV5
     action `    AddNew(DefaultOutputList, " =>");`
 

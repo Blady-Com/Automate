@@ -173,18 +173,17 @@ begin
       WriteToFile (ObjectList, FObject);
 
       Put_Line (FObject, "  begin");
-      Put_Line (FObject, "  Result := Event = " & NullEventStr & ";");
       Put_Line (FObject, "  while (State /= stError) and (State /= stQuit) loop");
+      Put_Line (FObject, "    Result := Event = " & NullEventStr & ";");
       Put_Line (FObject, "    while Event = " & NullEventStr & " loop");
       Put_Line (FObject, "      " & GetEventStr & "(Event, " & EventDesStr & ");");
       Put_Line (FObject, "    end loop;");
       Put_Line (FObject, "    if Debug then"); -- Todo: transfer following lines in an user debug subprogram
-      Put_Line (FObject, "      Put(From_UTF_8 (TState'Image(State)) & ""; "" & Image(Event));");
+      Put_Line (FObject, "      Put(From_UTF_8 (TState'Image(State)) & ""; "");");
       Put_Line (FObject, "      if not Result then");
-      Put_Line (FObject, "        Put(""+"");");
-      Put_Line (FObject, "        Result := True;");
+      Put_Line (FObject, "        Put(""+ "");");
       Put_Line (FObject, "      end if;");
-      Put_Line (FObject, "      Put_Line(""; "" & " & EventDesStr & ");");
+      Put_Line (FObject, "      Put_Line(Image(Event) & ""; "" & " & EventDesStr & ");");
       Put_Line (FObject, "    end if;");
       Put_Line (FObject, "    case State is");
 
@@ -198,11 +197,10 @@ begin
       Put_Line (FObject, "  end Automate;");
       New_Line (FObject);
       Put_Line (FObject, "procedure Start" & AName & "(Result : out Boolean; Debug : Boolean := False) is");
-      Put_Line (FObject, "  Event : " & TEventStr & ";");
+      Put_Line (FObject, "  Event : " & TEventStr & " := " & NullEventStr & ";");
       Put_Line (FObject, "  " & EventDesStr & " : " & TEventDesStr & ";");
       Put_Line (FObject, "  begin");
 
-      Put_Line (FObject, "  " & GetEventStr & "(Event, " & EventDesStr & ");");
       CWriteToFile (StateList, FObject);
 
       Put_Line (FObject, "  end Start" & AName & ";");
