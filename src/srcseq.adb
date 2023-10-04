@@ -3,7 +3,7 @@ use  UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef;
 
 package body SrcSeq is
 
-  type TState is (stError, stQuit, DA1,DA2,DA3,DA5,ET1,ET2,ET3,ET4,EV1,EV2,EV3,EV4,EV5,EV6,A1,A2,A3,A4,D1,D2,D3,D4,D5,Fin);
+  type TState is (stError, stQuit, DA1,DA2,DA3,DA5,ET1,ET2,ET3,ET4,EV1,EV2,EV3,EV4,EV5,EV6,A1,A2,A3,A4,D1,D2,D3,D4,D5,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PA8,PA9,PA10,PA11,PA12,PA13,Fin);
 
 procedure Automate (StartState : TState; Event : in out TTokenId; Token : in out TTokenStr; Result : out Boolean; Debug : Boolean := False) is
   State : TState := StartState;
@@ -45,7 +45,16 @@ procedure ActionDA2 is
       end if;
     when UndefId =>
       AName := Token;
+      declare
+        LResult : Boolean;
+      begin
+        Automate(PA1, DumEvent, Token, LResult, Debug);
+        if LResult then
       State := DA3;
+            else
+          State := stError;
+          end if;
+        end;
     when others =>
       Status(SrcAuto, NomFich, LigneFich);
       Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
@@ -752,6 +761,298 @@ procedure ActionD5 is
   Event := DumEvent;
   end;
 
+procedure ActionPA1 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when ParOuvId =>
+      State := PA2;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA2 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when UndefId =>
+      TEventStr := Token;
+      State := PA3;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA3 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when VirgId =>
+      State := PA4;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA4 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when UndefId =>
+      NullEventStr := Token;
+      State := PA5;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA5 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when VirgId =>
+      State := PA6;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA6 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when UndefId =>
+      EventDesStr := Token;
+      State := PA7;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA7 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when VirgId =>
+      State := PA8;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA8 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when UndefId =>
+      TEventDesStr := Token;
+      State := PA9;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA9 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when VirgId =>
+      State := PA10;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA10 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when UndefId =>
+      GetEventStr := Token;
+      State := PA11;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA11 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when VirgId =>
+      State := PA12;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA12 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when CarId =>
+      UserUnitStr := Token;
+      State := PA13;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionPA13 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when ParFermId =>
+      State := stQuit;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
 procedure ActionFin is
   DumEvent : TTokenId;
   begin
@@ -812,6 +1113,19 @@ procedure ActionFin is
       when D3 => ActionD3;
       when D4 => ActionD4;
       when D5 => ActionD5;
+      when PA1 => ActionPA1;
+      when PA2 => ActionPA2;
+      when PA3 => ActionPA3;
+      when PA4 => ActionPA4;
+      when PA5 => ActionPA5;
+      when PA6 => ActionPA6;
+      when PA7 => ActionPA7;
+      when PA8 => ActionPA8;
+      when PA9 => ActionPA9;
+      when PA10 => ActionPA10;
+      when PA11 => ActionPA11;
+      when PA12 => ActionPA12;
+      when PA13 => ActionPA13;
       when Fin => ActionFin;
       when stError | stQuit =>
         null;

@@ -44,20 +44,13 @@ begin
    Ending (Current_Input, LF_Ending);
    Scheme (Current_Input, UTF_8);
 
-   Put_Line ("Entrer les informations suivantes :");
-   New_Line;
-   Put ("Type des événements : ");
-   Get_Line (TEventStr);
-   Put ("Contexte de l'événement : ");
-   Get_Line (EventDesStr);
-   Put ("Type du contexte de l'événement : ");
-   Get_Line (TEventDesStr);
-   Put ("Constante événement nul : ");
-   Get_Line (NullEventStr);
-   Put ("Procédure de gestion des événements : ");
-   Get_Line (GetEventStr);
-   Put ("Unité(s) à inclure : ");
-   Get_Line (UserUnitStr);
+   if Argument_Count = 1 then
+      FName := From_UTF_8 (Argument (1));
+   else
+      Put_Line ("Usage : genauto chemin/de/l'automate");
+      Set_Exit_Status (Failure);
+      return;
+   end if;
 
    --Initialisation des objets utilisés.
    DefaultInitList := new TTextListMgr;
@@ -89,9 +82,6 @@ begin
    IdAuto.Insert ("same", SameId);
    IdAuto.Insert ("to", ToId);
 
-   Put ("Nom du fichier source : ");
-   Get_Line (FName);
-
    Time := Horlogems;
 
    SrcAuto := new TSourceMgr;
@@ -108,14 +98,9 @@ begin
       FName := FSplitName (FName);
       UName := TruncLast (FName);
 
-      -- Création de la spécification du package
-      Put ("Nom de l'unité Ada (spec : " & UName & ".ads) : ");
-      Get_Line (FName);
-      if FName = Null_UXString then
-         FName := UName & ".ads";
-      end if;
+      Put_Line ("Création de la spécification du package : " & UName & ".ads");
 
-      Create (FObject, Out_File, FName, UTF_8, LF_Ending);
+      Create (FObject, Out_File, UName & ".ads", UTF_8, LF_Ending);
 
       Put_Line (FObject, "package " & AName & " is");
       New_Line (FObject);
@@ -126,14 +111,9 @@ begin
 
       Close (FObject);
 
-      -- Création du corps du package
-      Put ("Nom de l'unité Ada (corps : " & UName & ".adb) : ");
-      Get_Line (FName);
-      if FName = Null_UXString then
-         FName := UName & ".adb";
-      end if;
+      Put_Line ("Création du corps du package : " & UName & ".adb");
 
-      Create (FObject, Out_File, FName, UTF_8, LF_Ending);
+      Create (FObject, Out_File, UName & ".adb", UTF_8, LF_Ending);
 
       if UserUnitStr /= Null_UXString then
          Put_Line (FObject, "with " & UserUnitStr & ';');

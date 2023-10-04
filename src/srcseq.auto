@@ -19,7 +19,7 @@
 -- CONTACT                          : http://blady.pagesperso-orange.fr
 -------------------------------------------------------------------------------}
 
-automate SrcSeq
+automate SrcSeq (TTokenId, NullId, Token, TTokenStr, ReadToken, `UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef`)
 
 
 { Evénements définis par défaut }
@@ -45,6 +45,7 @@ from DA1
 from DA2
   event UndefId to DA3
     action `    AName := Token;`
+    gosub PA1
 
 { Définition des événements par défaut ou d'un état }
 from DA3
@@ -261,6 +262,53 @@ from D5
            `    flDefaultDefault := True;`
     gosub EV2
 
+{ Définition des paramètres de l'automate }
+from PA1
+  event ParOuvId to PA2
+  
+{   - Type des événements }
+from PA2
+  event UndefId to PA3
+    action `    TEventStr := Token;`
+from PA3
+  event VirgId to PA4
+
+{   - Constante événement nul }
+from PA4
+  event UndefId to PA5
+    action `    NullEventStr := Token;`
+from PA5
+  event VirgId to PA6
+  
+{   - Information de l'événement }
+from PA6
+  event UndefId to PA7
+    action `    EventDesStr := Token;`
+from PA7
+  event VirgId to PA8
+  
+{   - Type des informations de l'événement }
+from PA8
+  event UndefId to PA9
+    action `    TEventDesStr := Token;`
+from PA9
+  event VirgId to PA10
+  
+{   - Procédure de lecture des événements }
+from PA10
+  event UndefId to PA11
+    action `    GetEventStr := Token;`
+from PA11
+  event VirgId to PA12
+  
+{   - Unité(s) à inclure }
+from PA12
+  event CarId to PA13
+    action `    UserUnitStr := Token;`
+  
+from PA13
+  event ParFermId to out
+  
 { Fin de l'automate}
 from Fin
   event EotId to out

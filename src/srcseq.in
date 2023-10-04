@@ -1,9 +1,0 @@
-TTokenId
-Token
-TTokenStr
-NullId
-ReadToken
-UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef
-srcseq.auto
-srcseq.ads
-srcseq.adb

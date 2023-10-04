@@ -38,7 +38,8 @@ package InSrc is
    -- Eléments lexicaux
    type TTokenId is
      (NullId, EotId, NewlineId, ErrorId, UnknownId, CallId, CarId, CommentId, UndefId, AutomId, DefaultId, OutId, ErrId,
-      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId, GosubId, EndId, SameId);
+      FromId, InitId, EventId, ActionId, VirgId, PlusId, PointpointId, ToId, GosubId, EndId, SameId, ParOuvId,
+      ParFermId);
 
    function Image is new UXStrings.Conversions.Scalar_Image (TTokenId);
 

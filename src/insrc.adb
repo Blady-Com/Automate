@@ -265,9 +265,12 @@ package body InSrc is
             if ChSuivant = '*' then
                ReadComment;
             else
-               TokenId := ErrorId;
-               Token   := "(" & ChSuivant;
+               TokenId := ParOuvId;
+               Token   := "(";
             end if;
+         when ')' =>
+            TokenId := ParFermId;
+            Token   := ")";
          when '-' =>
             if ChSuivant = '-' then
                ReadCommentSingleLine;
