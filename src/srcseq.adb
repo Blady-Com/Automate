@@ -3,7 +3,7 @@ use  UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef;
 
 package body SrcSeq is
 
-  type TState is (stError, stQuit, DA1,DA2,DA3,DA5,ET1,ET2,ET3,ET4,EV1,EV2,EV3,EV4,EV5,EV6,A1,A2,A3,A4,D1,D2,D3,D4,D5,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PA8,PA9,PA10,PA11,PA12,PA13,Fin);
+  type TState is (stError, stQuit, DA1,DA2,DA3,DA5,ET1,ET2,ET3,ET4,EV1,EV2,EV3,EV4,EV5,EV6,A1,A2,A3,A4,D1,D2,D3,D4,D5,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PA8,PA9,PA10,PA11,PA12,PA13,DBG1,DGB2,Fin);
 
 procedure Automate (StartState : TState; Event : in out TTokenId; Token : in out TTokenStr; Result : out Boolean; Debug : Boolean := False) is
   State : TState := StartState;
@@ -92,7 +92,18 @@ procedure ActionDA3 is
       begin
         Automate(D1, DumEvent, Token, LResult, Debug);
         if LResult then
-      State := DA5;
+      null;
+            else
+          State := stError;
+          end if;
+        end;
+    when DebugId =>
+      declare
+        LResult : Boolean;
+      begin
+        Automate(DBG1, DumEvent, Token, LResult, Debug);
+        if LResult then
+      null;
             else
           State := stError;
           end if;
@@ -123,7 +134,7 @@ procedure ActionDA5 is
       begin
         Automate(ET1, DumEvent, Token, LResult, Debug);
         if LResult then
-      State := DA5;
+      null;
             else
           State := stError;
           end if;
@@ -442,7 +453,7 @@ procedure ActionEV6 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-    when EventId | EndId | FromId =>
+    when DebugId | EventId | EndId | FromId =>
       DumEvent := Event;
       if StateToStr /= Null_UXString then
         AddNew(DefaultOutputList, "      State := " & StateToStr & ";");
@@ -661,7 +672,7 @@ procedure ActionD3 is
         Status(SrcAuto, NomFich, LigneFich);
         Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
       end if;
-    when FromId =>
+    when DebugId | EndId | FromId =>
       DumEvent := Event;
       State := stQuit;
     when CallId | GosubId | ActionId | CarId =>
@@ -702,7 +713,7 @@ procedure ActionD4 is
       end if;
     when EventId =>
       State := D5;
-    when FromId =>
+    when DebugId | EndId | FromId =>
       DumEvent := Event;
       State := stQuit;
     when others =>
@@ -1053,6 +1064,64 @@ procedure ActionPA13 is
   Event := DumEvent;
   end;
 
+procedure ActionDBG1 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when EventId =>
+      DefaultOutputList := DebugEventtList;
+      State := DGB2;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
+procedure ActionDGB2 is
+  DumEvent : TTokenId;
+  begin
+  DumEvent := NullId;
+  case Event is
+    when CommentId =>
+      null;
+    when NewLineId =>
+      if Debug then
+        Status(SrcAuto, NomFich, LigneFich);
+        Put_Line("Fichier " & NomFich & ", ligne " & Image(LigneFich));
+      end if;
+    when ActionId | CarId =>
+      DumEvent := Event;
+      declare
+        LResult : Boolean;
+      begin
+        Automate(A1, DumEvent, Token, LResult, Debug);
+        if LResult then
+      null;
+            else
+          State := stError;
+          end if;
+        end;
+    when DefaultId | FromId | EndId =>
+      DumEvent := Event;
+      State := stQuit;
+    when others =>
+      Status(SrcAuto, NomFich, LigneFich);
+      Put_Line("Erreur de syntaxe à la ligne " & Image(LigneFich) & ", " & Image(Event) & ", " & Token);
+      State := stError;
+    end case;
+  Event := DumEvent;
+  end;
+
 procedure ActionFin is
   DumEvent : TTokenId;
   begin
@@ -1126,6 +1195,8 @@ procedure ActionFin is
       when PA11 => ActionPA11;
       when PA12 => ActionPA12;
       when PA13 => ActionPA13;
+      when DBG1 => ActionDBG1;
+      when DGB2 => ActionDGB2;
       when Fin => ActionFin;
       when stError | stQuit =>
         null;

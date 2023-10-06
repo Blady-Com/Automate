@@ -64,6 +64,9 @@ package OutSrc is
    -- Référence de l'objet assurant la gestion du texte par défaut
    DefaultDefaultList : PTextListMgr;
 
+   -- Référence de l'objet assurant la gestion du texte de debug sur évènement
+   DebugEventtList : PTextListMgr;
+
    -- Référence de l'objet assurant la gestion du nom des états
    StateList : PStateListMgr;
 

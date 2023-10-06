@@ -28,6 +28,7 @@
         <string>action</string>
         <string>automate</string>
         <string>call</string>
+        <string>debug</string>
         <string>default</string>
         <string>end</string>
         <string>error</string>

@@ -59,6 +59,8 @@ begin
 
    DefaultDefaultList := new TTextListMgr;
 
+   DebugEventtList := new TTextListMgr;
+
    StateList := new TStateListMgr;
 
    EventList := new TEnumListMgr;
@@ -71,6 +73,7 @@ begin
    IdAuto.Insert ("action", ActionId);
    IdAuto.Insert ("automate", AutomId);
    IdAuto.Insert ("call", CallId);
+   IdAuto.Insert ("debug", DebugId);
    IdAuto.Insert ("default", DefaultId);
    IdAuto.Insert ("end", EndId);
    IdAuto.Insert ("error", ErrId);
@@ -158,13 +161,16 @@ begin
       Put_Line (FObject, "    while Event = " & NullEventStr & " loop");
       Put_Line (FObject, "      " & GetEventStr & "(Event, " & EventDesStr & ");");
       Put_Line (FObject, "    end loop;");
-      Put_Line (FObject, "    if Debug then"); -- Todo: transfer following lines in an user debug subprogram
-      Put_Line (FObject, "      Put(From_UTF_8 (TState'Image(State)) & ""; "");");
-      Put_Line (FObject, "      if not Result then");
-      Put_Line (FObject, "        Put(""+ "");");
-      Put_Line (FObject, "      end if;");
-      Put_Line (FObject, "      Put_Line(Image(Event) & ""; "" & " & EventDesStr & ");");
-      Put_Line (FObject, "    end if;");
+
+      if not DebugEventtList.Is_Empty then
+         Put_Line (FObject, "    if Debug then");
+         if DebugEventtList.Last_Element = Null_UXString then
+            DebugEventtList.Delete_Last;
+         end if;
+         WriteToFile (DebugEventtList, FObject);
+         Put_Line (FObject, "    end if;");
+      end if;
+
       Put_Line (FObject, "    case State is");
 
       AWriteToFile (StateList, FObject);
@@ -197,6 +203,8 @@ begin
    Done (DefaultEventList);
 
    Done (DefaultDefaultList);
+
+   Done (DebugEventtList);
 
    Done (ObjectList);
 

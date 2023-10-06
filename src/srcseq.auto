@@ -22,6 +22,16 @@
 automate SrcSeq (TTokenId, NullId, Token, TTokenStr, ReadToken, `UXStrings, UXStrings.Text_IO, InSrc, OutSrc, BasicDef`)
 
 
+{ Affichage pour le debug }
+debug
+  event
+    action `    Put(From_UTF_8 (TState'Image(State)) & "; ");`
+           `    if not Result then`
+           `      Put("+ ");`
+           `    end if;`
+           `    Put_Line(Image(Event) & "; " & Token);`
+
+
 { Evénements définis par défaut }
 default
   event CommentId to same
@@ -51,12 +61,14 @@ from DA2
 from DA3
   event FromId to DA5
     gosub ET1
-  event DefaultId to DA5
+  event DefaultId to same
     gosub D1
+  event DebugId to same
+    gosub DBG1
 
 { Définition d'un autre état ou de la fin de l'automate }
 from DA5
-  event FromId to DA5
+  event FromId to same
     gosub ET1
   event EndId to fin
 
@@ -166,7 +178,7 @@ from EV5
 
 { Définition des actions, d'un autre événement, d'un autre état ou de la fin de l'automate }
 from EV6
-  event EventId, EndId, FromId + to out
+  event DebugId, EventId, EndId, FromId + to out
     action `    if StateToStr /= Null_UXString then`
            `      AddNew(DefaultOutputList, "      State := " & StateToStr & ";");`
            `    else`
@@ -238,7 +250,7 @@ from D2
 { Définition des actions: texte Ada, "gosub", "call';
   d'un autre événement ou de la fin du sous automate }
 from D3
-  event FromId + to out
+  event DebugId, EndId, FromId + to out
   event CallId, GosubId, ActionId, CarId + to same
     action `    DefaultOutputList := DefaultInitList;`
     gosub A1
@@ -247,7 +259,7 @@ from D3
 { Définition d'un autre événement ou de la fin du sous automate }
 from D4
   event EventId to D5
-  event FromId + to out
+  event DebugId, EndId, FromId + to out
 
 { Nom de l'événement: identificateur ou "default" }
 from D5
@@ -308,6 +320,17 @@ from PA12
   
 from PA13
   event ParFermId to out
+
+{ Définition des actions de debug }
+
+from DBG1
+  event EventId to DGB2
+    action `    DefaultOutputList := DebugEventtList;`
+  
+from DGB2
+  event ActionId, CarId + to same
+    gosub A1
+  event DefaultId, FromId, EndId + to out
   
 { Fin de l'automate}
 from Fin
