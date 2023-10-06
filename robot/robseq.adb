@@ -3,14 +3,13 @@ use  Ada.Text_IO, EventMgr;
 
 package body RobSeq is
 
-  type TState is (stError, stQuit, DroiteHautOuvert, GaucheHautOuvert, DroiteBasOuvert, GaucheBasOuvert, DroiteHautFerme, GaucheHautFerme, DroiteBasFerme, GaucheBasFerme);
+  type TState is (stError, stQuit, DroiteHautOuvert,GaucheHautOuvert,DroiteBasOuvert,GaucheBasOuvert,DroiteHautFerme,GaucheHautFerme,DroiteBasFerme,GaucheBasFerme);
 
-procedure Automate (TheState : TState; Event : in out TEvent; EventDes : in out TEventDes; Result : out Boolean; Debug : Boolean := False) is
-  State : TState := TheState;
+procedure Automate (StartState : TState; Event : in out TEvent; EventDes : in out TEventDes; Result : out Boolean; Debug : Boolean := False) is
+  State : TState := StartState;
 
 procedure ActionDroiteHautOuvert is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -22,15 +21,12 @@ procedure ActionDroiteHautOuvert is
       State := GaucheHautOuvert;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionGaucheHautOuvert is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -42,15 +38,12 @@ procedure ActionGaucheHautOuvert is
       State := DroiteHautOuvert;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionDroiteBasOuvert is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -59,15 +52,12 @@ procedure ActionDroiteBasOuvert is
       State := DroiteHautOuvert;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionGaucheBasOuvert is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -79,15 +69,12 @@ procedure ActionGaucheBasOuvert is
       State := GaucheHautOuvert;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionDroiteHautFerme is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -102,15 +89,12 @@ procedure ActionDroiteHautFerme is
       State := GaucheHautFerme;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionGaucheHautFerme is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -125,15 +109,12 @@ procedure ActionGaucheHautFerme is
       State := DroiteHautFerme;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionDroiteBasFerme is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -145,15 +126,12 @@ procedure ActionDroiteBasFerme is
       State := DroiteHautFerme;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
-
 procedure ActionGaucheBasFerme is
   DumEvent : TEvent;
-
   begin
   DumEvent := evNul;
   case Event is
@@ -165,25 +143,23 @@ procedure ActionGaucheBasFerme is
       State := GaucheHautFerme;
     when others =>
       Put_Line("Ordre incorrect !!!");
-      null;
     end case;
   Event := DumEvent;
   end;
 
 
   begin
-  Result := Event = evNul;
   while (State /= stError) and (State /= stQuit) loop
+    Result := Event = evNul;
     while Event = evNul loop
       GetNextEvent(Event, EventDes);
     end loop;
     if Debug then
-      Put(TState'Image(State) & "; " & TEvent'Image(Event));
+      Put(State'Image & "; ");
       if not Result then
-        Put("+");
-        Result := True;
+        Put("+ ");
       end if;
-      Put_Line("; " & EventDes);
+      Put_Line(Event'Image & "; " & EventDes);
     end if;
     case State is
       when DroiteHautOuvert => ActionDroiteHautOuvert;
@@ -194,7 +170,7 @@ procedure ActionGaucheBasFerme is
       when GaucheHautFerme => ActionGaucheHautFerme;
       when DroiteBasFerme => ActionDroiteBasFerme;
       when GaucheBasFerme => ActionGaucheBasFerme;
-      when others =>
+      when stError | stQuit =>
         null;
       end case;
     end loop;
@@ -202,10 +178,9 @@ procedure ActionGaucheBasFerme is
   end Automate;
 
 procedure StartRobSeq(Result : out Boolean; Debug : Boolean := False) is
-  Event : TEvent;
+  Event : TEvent := evNul;
   EventDes : TEventDes;
   begin
-  GetNextEvent(Event, EventDes);
   Automate(DroiteHautOuvert, Event, EventDes, Result, Debug);
   end StartRobSeq;
 

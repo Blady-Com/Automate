@@ -1,5 +1,13 @@
-automate RobSeq
+automate RobSeq (TEvent, evNul, EventDes, TEventDes, GetNextEvent, `Ada.Text_IO, EventMgr`)
 
+{ Affichage pour le debug }
+debug
+  event
+    action `    Put(State'Image & "; ");`
+           `    if not Result then`
+           `      Put("+ ");`
+           `    end if;`
+           `    Put_Line(Event'Image & "; " & EventDes);`
 default
   event default
     to same
