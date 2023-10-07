@@ -13,11 +13,11 @@ In your working folder, do:
 ```
 % alr get automate
 % cd automate_*
-% alr run
+% alr build
 ```
 
 ## Licence
 
 All files are provided under terms of the [CeCILL](https://cecill.info) License version 2.1.
 
-Pascal Pignard, mars 2017.
+Pascal Pignard, March 2017, October 2023.

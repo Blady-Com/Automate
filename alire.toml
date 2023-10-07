@@ -1,6 +1,6 @@
 name = "automate"
 description = "Ada finite-state machine generator"
-version = "3.0.0+alpha"
+version = "3.0.0"
 tags = ["automaton", "generator"]
 
 authors = ["Pascal Pignard"]
@@ -15,4 +15,4 @@ executables = ["genauto"]
 [gpr-set-externals.'case(os)']
 macos   = { GENAUTO_LINKER_FLAGS = "-Wl,-no_pie" } # needed for symbolic exception traceback 
 [[depends-on]]
-uxstrings = ">=0.5"
+uxstrings = ">=0.6"
